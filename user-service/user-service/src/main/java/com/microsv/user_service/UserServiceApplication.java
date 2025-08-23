@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 
 @SpringBootApplication
 @EnableDiscoveryClient // đăng ký eureka
@@ -16,6 +17,7 @@ public class UserServiceApplication {
 		SpringApplication.run(UserServiceApplication.class, args);
 	}
 	@Bean
+	@DependsOn("entityManagerFactory") // <-- THÊM DÒNG NÀY
 	CommandLineRunner commandLineRunner(UserRepository userRepository) {
 		return args -> {
 			// Tạo và lưu user mẫu 1

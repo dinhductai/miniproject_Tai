@@ -1,28 +1,28 @@
 
-# C?ng ch?y c?a API Gateway, ?ây s? là c?ng duy nh?t client truy c?p
+# C?ng ch?y c?a API Gateway, ?Ã¢y s? lÃ  c?ng duy nh?t client truy c?p
 server:
   port: 8080
 
-# Tên c?a service này khi ??ng ký v?i Eureka
+# TÃªn c?a service nÃ y khi ??ng kÃ½ v?i Eureka
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
       routes:
-        # Quy t?c 1: Dành cho User Service
+        # Quy t?c 1: DÃ nh cho User Service
         - id: user-service-route
-          uri: lb://user-service # lb = load balancer, tìm service tên "user-service" trong Eureka
+          uri: lb://user-service # lb = load balancer, tÃ¬m service tÃªn "user-service" trong Eureka
           predicates:
-            - Path=/api/users/** # N?u request có ???ng d?n /api/users/... thì áp d?ng quy t?c này
+            - Path=/api/users/** # N?u request cÃ³ ???ng d?n /api/users/... thÃ¬ Ã¡p d?ng quy t?c nÃ y
 
-        # Quy t?c 2: Dành cho Order Service
+        # Quy t?c 2: DÃ nh cho Order Service
         - id: order-service-route
-          uri: lb://order-service # Tìm service tên "order-service" trong Eureka
+          uri: lb://order-service # TÃ¬m service tÃªn "order-service" trong Eureka
           predicates:
-            - Path=/api/orders/** # N?u request có ???ng d?n /api/orders/... thì áp d?ng quy t?c này
+            - Path=/api/orders/** # N?u request cÃ³ ???ng d?n /api/orders/... thÃ¬ Ã¡p d?ng quy t?c nÃ y
 
-# C?u hình ?? gateway tìm th?y Eureka Server
+# C?u hÃ¬nh ?? gateway tÃ¬m th?y Eureka Server
 eureka:
   client:
     service-url:

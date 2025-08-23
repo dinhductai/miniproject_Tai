@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -16,6 +17,7 @@ public class OrderServiceApplication {
 		SpringApplication.run(OrderServiceApplication.class, args);
 	}
 	@Bean
+	@DependsOn("entityManagerFactory")
 	CommandLineRunner commandLineRunner(OrderRepository orderRepository) {
 		return args -> {
 			// Tạo order cho user có ID = 1
