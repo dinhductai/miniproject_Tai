@@ -12,11 +12,11 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>com.microsv</groupId>
-	<artifactId>order-service</artifactId>
+	<groupId>com.example</groupId>
+	<artifactId>api-gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>order-service</name>
-	<description>Order Service</description>
+	<name>api-gateway</name>
+	<description>API Gateway</description>
 
 	<properties>
 		<java.version>21</java.version>
@@ -25,30 +25,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-gateway</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
