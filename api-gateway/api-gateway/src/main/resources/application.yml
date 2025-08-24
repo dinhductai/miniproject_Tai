@@ -6,14 +6,19 @@ spring:
   cloud:
     gateway:
       routes:
+#        định tuyến cho các service dựa vào quy tắc
         - id: user-service-route
           uri: lb://user-service
           predicates:
-            - Path=/api/users/**
+            - Path=/api/users/**  #dựa vào đây để định tuyến
         - id: order-service-route
           uri: lb://order-service
           predicates:
             - Path=/api/orders/**
+        - id: product-service-route  # Route mới
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
 eureka:
   client:
     service-url:

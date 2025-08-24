@@ -58,6 +58,34 @@ services:
       discovery-server:
         condition: service_started
 
+
+  postgres-product-db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=product_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password123
+    ports:
+      - "5434:5432" # Ánh xạ ra một cổng khác trên máy host
+    volumes:
+      - product-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d product_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Thêm vào phần 'services'
+  product-service:
+    build: ./product-service/product-service # Giả sử thư mục code của bạn là 'product-service'
+    ports:
+      - "9003:9003"
+    depends_on:
+      postgres-product-db:
+        condition: service_healthy
+      discovery-server:
+        condition: service_started
+
   api-gateway:
     build: ./api-gateway/api-gateway
     ports:
@@ -73,3 +101,4 @@ services:
 volumes:
   user-db-data:
   order-db-data:
+  product-db-data:
