@@ -13,9 +13,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String productName;
     private Long userId; // Khóa ngoại trỏ tới user
-
+    private Long productId;
     public Long getId() {
         return id;
     }
@@ -24,12 +23,12 @@ public class Order {
         this.id = id;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public Long getUserId() {

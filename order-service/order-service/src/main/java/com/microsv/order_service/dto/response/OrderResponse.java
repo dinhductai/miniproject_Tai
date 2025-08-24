@@ -5,14 +5,13 @@ import lombok.NoArgsConstructor;
 
 public class OrderResponse {
     private Long orderId;
-    private String productName;
     private UserResponse user; // Lồng thông tin user vào đây
+    private ProductResponse product;
 
-
-    public OrderResponse(Long orderId, String productName, UserResponse user) {
+    public OrderResponse(Long orderId, UserResponse user, ProductResponse product) {
         this.orderId = orderId;
-        this.productName = productName;
         this.user = user;
+        this.product = product;
     }
 
     public Long getOrderId() {
@@ -23,19 +22,19 @@ public class OrderResponse {
         this.orderId = orderId;
     }
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public UserResponse getUser() {
         return user;
     }
 
     public void setUser(UserResponse user) {
         this.user = user;
+    }
+
+    public ProductResponse getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductResponse product) {
+        this.product = product;
     }
 }

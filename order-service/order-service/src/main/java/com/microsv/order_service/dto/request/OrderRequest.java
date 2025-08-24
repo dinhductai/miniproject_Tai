@@ -1,16 +1,11 @@
 package com.microsv.order_service.dto.request;
 
 public class OrderRequest {
-    private String productName;
+
     private Long userId;
+    private Long productId;
+    private Integer quantity;
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
 
     public Long getUserId() {
         return userId;
@@ -18,5 +13,21 @@ public class OrderRequest {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }
