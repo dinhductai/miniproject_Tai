@@ -52,7 +52,7 @@ The system consists of **four primary services** that work together, containeriz
 ---
 
 ## 5. System Architecture 🏛️
-<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9fcf2af9-e17e-4d89-a71b-000a96895cde" />
+<img width="412" height="620" alt="image" src="https://github.com/user-attachments/assets/9fcf2af9-e17e-4d89-a71b-000a96895cde" />
 
 The system follows a **containerized Microservices pattern**.
 
