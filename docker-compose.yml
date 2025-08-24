@@ -1,3 +1,95 @@
+#services:
+#  discovery-server:
+#    build: ./discovery-server/discovery-server
+#    ports:
+#      - "8761:8761"
+#
+#  postgres-user-db:
+#    image: postgres:16-alpine
+#    environment:
+#      - POSTGRES_DB=user_db
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=password123
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - user-db-data:/var/lib/postgresql/data
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U postgres -d user_db"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#
+#  user-service:
+#    build: ./user-service/user-service
+#    ports:
+#      - "9001:9001"
+#    environment:
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-user-db:5432/user_db
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=password123
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+#    depends_on:
+#      postgres-user-db:
+#        condition: service_healthy
+#      discovery-server:
+#        condition: service_started
+#
+#  postgres-order-db:
+#    image: postgres:16-alpine
+#    environment:
+#      - POSTGRES_DB=order_db
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=password123
+#    ports:
+#      - "5433:5432"
+#    volumes:
+#      - order-db-data:/var/lib/postgresql/data
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U postgres -d order_db"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#
+#  order-service:
+#    build: ./order-service/order-service
+#    ports:
+#      - "9002:9002"
+#    environment:
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-order-db:5432/order_db
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=password123
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+#    depends_on:
+#      postgres-order-db:
+#        condition: service_healthy
+#      user-service:
+#        condition: service_started
+#      discovery-server:
+#        condition: service_started
+#
+#  api-gateway:
+#    build: ./api-gateway/api-gateway
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+#    depends_on:
+#      order-service:
+#        condition: service_started
+#      user-service:
+#        condition: service_started
+#      discovery-server:
+#        condition: service_started
+#
+#volumes:
+#  user-db-data:
+#  order-db-data:
+
 services:
   discovery-server:
     build: ./discovery-server/discovery-server
@@ -25,7 +117,9 @@ services:
     ports:
       - "9001:9001"
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - SPRING_APPLICATION_NAME=user-service
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-user-db:5432/user_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password123
@@ -58,7 +152,9 @@ services:
     ports:
       - "9002:9002"
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - SPRING_APPLICATION_NAME=order-service
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-order-db:5432/order_db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password123
@@ -77,7 +173,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+      - SPRING_APPLICATION_NAME=api-gateway
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULT_ZONE=http://discovery-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
     depends_on:
       order-service:
         condition: service_started
