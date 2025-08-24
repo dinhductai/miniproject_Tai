@@ -1,37 +1,5 @@
-#
-## C?ng ch?y c?a API Gateway, ?ây s? là c?ng duy nh?t client truy c?p
-#server:
-#  port: 8080
-#
-## Tên c?a service này khi ??ng ký v?i Eureka
-#spring:
-#  application:
-#    name: api-gateway
-#  cloud:
-#    gateway:
-#      routes:
-#        # Quy t?c 1: Dành cho User Service
-#        - id: user-service-route
-#          uri: lb://user-service # lb = load balancer, tìm service tên "user-service" trong Eureka
-#          predicates:
-#            - Path=/api/users/** # N?u request có ???ng d?n /api/users/... thì áp d?ng quy t?c này
-#
-#        # Quy t?c 2: Dành cho Order Service
-#        - id: order-service-route
-#          uri: lb://order-service # Tìm service tên "order-service" trong Eureka
-#          predicates:
-#            - Path=/api/orders/** # N?u request có ???ng d?n /api/orders/... thì áp d?ng quy t?c này
-#
-## C?u hình ?? gateway tìm th?y Eureka Server
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka/
-
-
 server:
   port: 8080
-
 spring:
   application:
     name: api-gateway
@@ -39,7 +7,7 @@ spring:
     gateway:
       routes:
         - id: user-service-route
-          uri: lb://user-service # lb = load balancer
+          uri: lb://user-service
           predicates:
             - Path=/api/users/**
         - id: order-service-route
@@ -49,5 +17,6 @@ spring:
 eureka:
   client:
     service-url:
-      # Trỏ đến Eureka Server bằng tên service trong Docker
       defaultZone: http://discovery-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
