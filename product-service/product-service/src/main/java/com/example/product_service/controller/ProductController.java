@@ -38,7 +38,7 @@ public class ProductController {
         }
     }
 
-    @PostMapping("/api/products/{id}/decrease-stock")
+    @PostMapping("{id}/decrease-stock")
     public ResponseEntity<?> decreaseStock(@PathVariable("id") Long id,
                                            @RequestParam Integer quantity){
         productService.decreaseStock(id,quantity);

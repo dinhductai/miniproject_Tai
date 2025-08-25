@@ -34,7 +34,8 @@ public class OrderServiceImpl implements OrderService {
 
         // Lấy thông tin user từ user-service
         UserResponse userResponse = userClient.getUserById(savedOrder.getUserId());
-
+        //gọi đến api nhằm giảm số lượng
+        productClient.decreaseStock(productResponse.getId(), orderRequest.getQuantity());
         return new OrderResponse(savedOrder.getId(), userResponse,productResponse);
         }
         else{
