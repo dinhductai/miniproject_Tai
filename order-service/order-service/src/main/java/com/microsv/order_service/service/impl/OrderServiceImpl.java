@@ -25,22 +25,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse createOrder(OrderRequest orderRequest) {
-        ProductResponse productResponse = productClient.getProductById(orderRequest.getProductId());
-        if(productResponse.getStockQuantity() >= orderRequest.getQuantity()){
+        productClient.decreaseStock(orderRequest.getProductId(), orderRequest.getQuantity());
         Order order = new Order();
         order.setUserId(orderRequest.getUserId());
-        order.setProductId(productResponse.getId());
+        order.setProductId(orderRequest.getProductId());
         Order savedOrder = orderRepository.save(order);
 
-        // Lấy thông tin user từ user-service
         UserResponse userResponse = userClient.getUserById(savedOrder.getUserId());
-        //gọi đến api nhằm giảm số lượng
-        productClient.decreaseStock(productResponse.getId(), orderRequest.getQuantity());
-        return new OrderResponse(savedOrder.getId(), userResponse,productResponse);
-        }
-        else{
-            throw new RuntimeException("Số lượng đặt hàng nhiều hơn số lượng hiện có");
-        }
+        ProductResponse productResponse = productClient.getProductById(savedOrder.getProductId());
+
+        return new OrderResponse(savedOrder.getId(), userResponse, productResponse);
     }
 
     @Override

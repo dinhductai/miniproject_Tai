@@ -41,8 +41,12 @@ public class ProductController {
     @PostMapping("{id}/decrease-stock")
     public ResponseEntity<?> decreaseStock(@PathVariable("id") Long id,
                                            @RequestParam Integer quantity){
-        productService.decreaseStock(id,quantity);
-        return ResponseEntity.ok().build();
+        try {
+            productService.decreaseStock(id, quantity);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

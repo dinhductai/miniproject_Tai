@@ -36,6 +36,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void decreaseStock(Long id, Integer quantity) {
         Product product = getProduct(id);
+        if (product.getStockQuantity() < quantity) {
+            throw new RuntimeException("Not enough stock for product ID: " + id);
+        }
         product.setStockQuantity(product.getStockQuantity() - quantity);
         productRepository.save(product);
     }
