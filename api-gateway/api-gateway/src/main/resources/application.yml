@@ -1,24 +1,29 @@
 server:
   port: 8080
+
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
       routes:
-#        định tuyến cho các service dựa vào quy tắc
         - id: user-service-route
           uri: lb://user-service
           predicates:
-            - Path=/api/users/**  #dựa vào đây để định tuyến
+            - Path=/api/users/**
         - id: order-service-route
           uri: lb://order-service
           predicates:
             - Path=/api/orders/**
-        - id: product-service-route  # Route mới
+        - id: product-service-route
           uri: lb://product-service
           predicates:
             - Path=/api/products/**
+        - id: auth-service-route           # 👈 Thêm đoạn này
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+
 eureka:
   client:
     service-url:

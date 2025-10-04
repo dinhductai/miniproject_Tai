@@ -3,13 +3,19 @@ services:
     build: ./discovery-server/discovery-server
     ports:
       - "8761:8761"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   postgres-user-db:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=user_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password123
+      POSTGRES_DB: user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
     ports:
       - "5432:5432"
     volumes:
@@ -28,14 +34,14 @@ services:
       postgres-user-db:
         condition: service_healthy
       discovery-server:
-        condition: service_started
+        condition: service_healthy
 
   postgres-order-db:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=order_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password123
+      POSTGRES_DB: order_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
     ports:
       - "5433:5432"
     volumes:
@@ -56,17 +62,16 @@ services:
       user-service:
         condition: service_started
       discovery-server:
-        condition: service_started
-
+        condition: service_healthy
 
   postgres-product-db:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=product_db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password123
+      POSTGRES_DB: product_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
     ports:
-      - "5434:5432" # Ánh xạ ra một cổng khác trên máy host
+      - "5434:5432"
     volumes:
       - product-db-data:/var/lib/postgresql/data
     healthcheck:
@@ -75,15 +80,24 @@ services:
       timeout: 5s
       retries: 5
 
-  # Thêm vào phần 'services'
   product-service:
-    build: ./product-service/product-service # Giả sử thư mục code của bạn là 'product-service'
+    build: ./product-service/product-service
     ports:
       - "9003:9003"
     depends_on:
       postgres-product-db:
         condition: service_healthy
       discovery-server:
+        condition: service_healthy
+
+  auth-service:
+    build: ./auth-service/auth-service
+    ports:
+      - "9004:9004"
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+      user-service:
         condition: service_started
 
   api-gateway:
@@ -95,8 +109,12 @@ services:
         condition: service_started
       user-service:
         condition: service_started
-      discovery-server:
+      product-service:
         condition: service_started
+      auth-service:
+        condition: service_started
+      discovery-server:
+        condition: service_healthy
 
 volumes:
   user-db-data:
