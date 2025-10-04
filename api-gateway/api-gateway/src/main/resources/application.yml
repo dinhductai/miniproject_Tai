@@ -19,10 +19,22 @@ spring:
           uri: lb://product-service
           predicates:
             - Path=/api/products/**
-        - id: auth-service-route           # 👈 Thêm đoạn này
+        - id: auth-service-route
           uri: lb://auth-service
           predicates:
             - Path=/api/auth/**
+
+        # --- PHẦN CẬP NHẬT CHO SERVICE MỚI ---
+        - id: task-service-route
+          uri: lb://task-service
+          predicates:
+            - Path=/api/tasks/**
+
+        - id: ai-service-route
+          uri: lb://ai-service
+          predicates:
+            - Path=/api/ai/**
+        # ------------------------------------
 
 eureka:
   client:
