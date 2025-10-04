@@ -1,0 +1,18 @@
+server:
+  port: 9004 # Chọn một cổng chưa được sử dụng
+
+spring:
+  application:
+    name: auth-service
+  # Không cần cấu hình datasource hoặc jpa ở đây vì auth-service không kết nối trực tiếp đến CSDL
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# Khóa bí mật để ký JWT token, bạn có thể thay đổi thành một chuỗi phức tạp hơn
+jwt:
+  secret: day-la-mot-chuoi-bi-mat-rat-dai-va-an-toan-de-ma-hoa-jwt-token
