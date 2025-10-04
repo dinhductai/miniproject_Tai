@@ -150,4 +150,7 @@ curl http://localhost:8080/api/orders/1
 
 ---
 
-✅ This project demonstrates a complete **Microservices system** with **Spring Boot, Spring Cloud, Eureka, Gateway, PostgreSQL, and Docker Compose**.
+✅ This project demonstrates a complete **Microservices system** with **Spring Boot, Spring Cloud, Eureka, Gateway, PostgreSQL, and Docker Compose**. 
+
+docker-compose down -v
+docker-compose up --build
