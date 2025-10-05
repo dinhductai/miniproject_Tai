@@ -1,6 +1,7 @@
 package com.microsv.user_service.service.impl;
 
 import com.microsv.user_service.entity.User;
+import com.microsv.user_service.enumeration.RoleName;
 import com.microsv.user_service.repository.UserRepository;
 import com.microsv.user_service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,4 +33,14 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.save(user);
     }
+
+//    static void addUsers(){
+//        User user = User.builder()
+//                .userName("Trung")
+//                .password("123")
+//                .email("trung@gmail.com")
+//                .profile("url1")
+//                .roles(RoleName.USER)
+//                .build();
+//    }
 }
