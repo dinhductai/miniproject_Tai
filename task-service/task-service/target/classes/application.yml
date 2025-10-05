@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: task-service
+  datasource:
+    url: jdbc:postgresql://postgres-task-db:5432/task_db
+    username: postgres
+    password: password123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 9007 # <-- Cổng mới cho Task Service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
