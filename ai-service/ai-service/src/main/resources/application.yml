@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: ai-service
+  ai:
+    openai:
+      api-key: <YOUR_OPENAI_API_KEY> # <-- THAY BẰNG API KEY CỦA BẠN
+
+server:
+  port: 9006 # <-- Cổng mới cho AI Service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+  instance:
+    prefer-ip-address: true

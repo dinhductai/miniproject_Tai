@@ -1,18 +1,20 @@
 spring:
   application:
-    name: user-service
+    name: task-service
   datasource:
-    url: jdbc:postgresql://postgres-user-db:5432/user_db
+    url: jdbc:postgresql://postgres-task-db:5432/task_db
     username: postgres
     password: password123
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
 server:
-  port: 9001
+  port: 9007 # <-- Cổng mới cho Task Service
+
 eureka:
   client:
     service-url:

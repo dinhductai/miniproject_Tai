@@ -4,7 +4,7 @@ services:
     ports:
       - "8761:8761"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8761/actuator/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -100,6 +100,45 @@ services:
       user-service:
         condition: service_started
 
+  # --- KHỐI MỚI CHO TASK SERVICE ---
+  postgres-task-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: task_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5435:5432" # Cổng mới
+    volumes:
+      - task-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d task_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  task-service:
+    build: ./task-service/task-service
+    ports:
+      - "9007:9007" # Cổng mới
+    depends_on:
+      postgres-task-db:
+        condition: service_healthy
+      discovery-server:
+        condition: service_healthy
+
+  # --- KHỐI MỚI CHO AI SERVICE ---
+  ai-service:
+    build: ./ai-service/ai-service
+    ports:
+      - "9006:9006" # Cổng mới
+    environment:
+      # Truyền API Key qua biến môi trường để bảo mật
+      SPRING_AI_OPENAI_API_KEY: <YOUR_OPENAI_API_KEY>
+    depends_on:
+      discovery-server:
+        condition: service_healthy
+
   api-gateway:
     build: ./api-gateway/api-gateway
     ports:
@@ -113,6 +152,10 @@ services:
         condition: service_started
       auth-service:
         condition: service_started
+      task-service: # <-- Cập nhật phụ thuộc
+        condition: service_started
+      ai-service: # <-- Cập nhật phụ thuộc
+        condition: service_started
       discovery-server:
         condition: service_healthy
 
@@ -120,3 +163,4 @@ volumes:
   user-db-data:
   order-db-data:
   product-db-data:
+  task-db-data: # <-- Khai báo volume mới
