@@ -154,3 +154,4 @@ curl http://localhost:8080/api/orders/1
 
 docker-compose down -v
 docker-compose up --build
+mvn clean package -DskipTests
