@@ -68,7 +68,7 @@ public class SecurityConfig {
     // Bean này chịu trách nhiệm giải mã và xác thực chữ ký của JWT
     @Bean
     public JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HS512");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HS384");
         return NimbusJwtDecoder
                 .withSecretKey(secretKeySpec)
                 .macAlgorithm(MacAlgorithm.HS384)
