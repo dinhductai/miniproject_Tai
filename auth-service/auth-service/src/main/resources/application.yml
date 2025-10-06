@@ -24,4 +24,4 @@ eureka:
 
 # Khóa bí mật để ký JWT token, bạn có thể thay đổi thành một chuỗi phức tạp hơn
 jwt:
-  secret: K7vP9mW3qL8tR2nF5xY4jH6dG1cB0zA8sE2uJ9wQ4iT3oM5pN6rV7yX8lZ2kC4eD
+  secret: A9mK2pX8vS4rW7tF1yD3bJ6nL0zQ5hG2eR9cU4xT8sV1wM7oP3lY6jN5iC

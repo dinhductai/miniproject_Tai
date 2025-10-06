@@ -13,4 +13,5 @@ public class ApplicationConfig {
         // Sử dụng BCryptPasswordEncoder, một chuẩn mã hóa mạnh
         return new BCryptPasswordEncoder();
     }
+
 }

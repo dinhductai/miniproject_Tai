@@ -30,6 +30,8 @@ services:
     build: ./user-service/user-service
     ports:
       - "9001:9001"
+    environment:
+      JWT_SECRET: A9mK2pX8vS4rW7tF1yD3bJ6nL0zQ5hG2eR9cU4xT8sV1wM7oP3lY6jN5iC
     depends_on:
       postgres-user-db:
         condition: service_healthy
@@ -90,7 +92,6 @@ services:
       discovery-server:
         condition: service_healthy
 
-  # --- PHẦN CẬP NHẬT CHO AUTH-SERVICE ---
   postgres-auth-db:
     image: postgres:16-alpine
     environment:
@@ -98,7 +99,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password123
     ports:
-      - "5436:5432" # <-- Cổng mới
+      - "5436:5432"
     volumes:
       - auth-db-data:/var/lib/postgresql/data
     healthcheck:
@@ -111,14 +112,15 @@ services:
     build: ./auth-service/auth-service
     ports:
       - "9004:9004"
+    environment:
+      JWT_SECRET: A9mK2pX8vS4rW7tF1yD3bJ6nL0zQ5hG2eR9cU4xT8sV1wM7oP3lY6jN5iC
     depends_on:
-      postgres-auth-db: # <-- Thêm phụ thuộc vào DB của nó
+      postgres-auth-db:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
       user-service:
         condition: service_started
-  # ------------------------------------
 
   postgres-task-db:
     image: postgres:16-alpine
@@ -160,6 +162,8 @@ services:
     build: ./api-gateway/api-gateway
     ports:
       - "8080:8080"
+    environment:
+      JWT_SECRET: A9mK2pX8vS4rW7tF1yD3bJ6nL0zQ5hG2eR9cU4xT8sV1wM7oP3lY6jN5iC
     depends_on:
       order-service:
         condition: service_started
@@ -181,4 +185,4 @@ volumes:
   order-db-data:
   product-db-data:
   task-db-data:
-  auth-db-data: # <-- Khai báo volume mới
+  auth-db-data:

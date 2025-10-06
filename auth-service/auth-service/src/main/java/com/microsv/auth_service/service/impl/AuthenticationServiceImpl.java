@@ -35,8 +35,9 @@ import java.util.*;
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final UserClient userClient; // <-- Tiêm Feign Client
-    private final InvalidatedTokenRepository invalidatedTokenRepository;
+    UserClient userClient; // <-- Tiêm Feign Client
+    InvalidatedTokenRepository invalidatedTokenRepository;
+    AuthenticationUtil authenticationUtil;
 
     @NonFinal
     @Value("${jwt.secret}")
@@ -45,7 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws AuthenticationException, JOSEException {
         UserAuthResponse user = userClient.getUserAuthDetails(authenticationRequest.getEmail());
-        AuthenticationUtil.checkPassword(authenticationRequest.getPassword(), user.getPassword());
+        authenticationUtil.checkPassword(authenticationRequest.getPassword(), user.getPassword());
         String scope = buildScope(user.getRoles());
         String token = generateToken(user,scope);
         return AuthenticationResponse.builder()
@@ -104,7 +105,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     }
     private String generateToken(UserAuthResponse userAuthResponse,String scope) throws JOSEException {
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS384);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(String.valueOf(userAuthResponse.getUserId()))
                 .issuer("smart_schedule.com")
