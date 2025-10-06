@@ -4,7 +4,16 @@ server:
 spring:
   application:
     name: auth-service
-  # Không cần cấu hình datasource hoặc jpa ở đây vì auth-service không kết nối trực tiếp đến CSDL
+  datasource:
+    url: jdbc:postgresql://postgres-auth-db:5432/auth_db
+    username: postgres
+    password: password123
+  jpa: # <-- Thụt ra một cấp
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 eureka:
   client:
@@ -15,4 +24,4 @@ eureka:
 
 # Khóa bí mật để ký JWT token, bạn có thể thay đổi thành một chuỗi phức tạp hơn
 jwt:
-  secret: day-la-mot-chuoi-bi-mat-rat-dai-va-an-toan-de-ma-hoa-jwt-token
+  secret: K7vP9mW3qL8tR2nF5xY4jH6dG1cB0zA8sE2uJ9wQ4iT3oM5pN6rV7yX8lZ2kC4eD

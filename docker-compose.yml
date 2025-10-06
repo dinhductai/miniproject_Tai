@@ -90,17 +90,36 @@ services:
       discovery-server:
         condition: service_healthy
 
+  # --- PHẦN CẬP NHẬT CHO AUTH-SERVICE ---
+  postgres-auth-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5436:5432" # <-- Cổng mới
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   auth-service:
     build: ./auth-service/auth-service
     ports:
       - "9004:9004"
     depends_on:
+      postgres-auth-db: # <-- Thêm phụ thuộc vào DB của nó
+        condition: service_healthy
       discovery-server:
         condition: service_healthy
       user-service:
         condition: service_started
+  # ------------------------------------
 
-  # --- KHỐI MỚI CHO TASK SERVICE ---
   postgres-task-db:
     image: postgres:16-alpine
     environment:
@@ -108,7 +127,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password123
     ports:
-      - "5435:5432" # Cổng mới
+      - "5435:5432"
     volumes:
       - task-db-data:/var/lib/postgresql/data
     healthcheck:
@@ -120,20 +139,18 @@ services:
   task-service:
     build: ./task-service/task-service
     ports:
-      - "9007:9007" # Cổng mới
+      - "9007:9007"
     depends_on:
       postgres-task-db:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
 
-  # --- KHỐI MỚI CHO AI SERVICE ---
   ai-service:
     build: ./ai-service/ai-service
     ports:
-      - "9006:9006" # Cổng mới
+      - "9006:9006"
     environment:
-      # Truyền API Key qua biến môi trường để bảo mật
       SPRING_AI_OPENAI_API_KEY: <YOUR_OPENAI_API_KEY>
     depends_on:
       discovery-server:
@@ -152,9 +169,9 @@ services:
         condition: service_started
       auth-service:
         condition: service_started
-      task-service: # <-- Cập nhật phụ thuộc
+      task-service:
         condition: service_started
-      ai-service: # <-- Cập nhật phụ thuộc
+      ai-service:
         condition: service_started
       discovery-server:
         condition: service_healthy
@@ -163,4 +180,5 @@ volumes:
   user-db-data:
   order-db-data:
   product-db-data:
-  task-db-data: # <-- Khai báo volume mới
+  task-db-data:
+  auth-db-data: # <-- Khai báo volume mới
