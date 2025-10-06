@@ -4,6 +4,7 @@ package com.microsv.user_service.service;
 
 import com.microsv.user_service.dto.request.UserCreationRequest;
 import com.microsv.user_service.dto.request.UserUpdateRequest;
+import com.microsv.user_service.dto.response.UserAuthResponse;
 import com.microsv.user_service.dto.response.UserResponse;
 import com.microsv.user_service.entity.User;
 
@@ -17,4 +18,5 @@ public interface UserService {
     UserResponse getUser(Long userId);
     UserResponse updateUser(Long userId, UserUpdateRequest request);
     void deleteUser(Long userId);
+    UserAuthResponse getUserByEmail(String email);
 }

@@ -3,6 +3,7 @@ package com.microsv.user_service.controller;
 
 import com.microsv.user_service.dto.request.UserCreationRequest;
 import com.microsv.user_service.dto.request.UserUpdateRequest;
+import com.microsv.user_service.dto.response.UserAuthResponse;
 import com.microsv.user_service.dto.response.UserResponse;
 import com.microsv.user_service.entity.User;
 import com.microsv.user_service.service.UserService;
@@ -33,10 +34,10 @@ public class UserController {
     }
 
     // Endpoint để lấy thông tin user theo ID (dành cho user đã đăng nhập hoặc admin)
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> getUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(userService.getUser(userId));
-    }
+//    @GetMapping("/{userId}")
+//    public ResponseEntity<UserResponse> getUser(@PathVariable Long userId) {
+//        return ResponseEntity.ok(userService.getUser(userId));
+//    }
 
     // Endpoint để lấy danh sách tất cả user (chỉ dành cho ADMIN)
     @GetMapping
@@ -58,4 +59,6 @@ public class UserController {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
+
+
 }

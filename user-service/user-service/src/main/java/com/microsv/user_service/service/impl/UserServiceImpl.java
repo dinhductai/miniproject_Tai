@@ -2,6 +2,7 @@ package com.microsv.user_service.service.impl;
 
 import com.microsv.user_service.dto.request.UserCreationRequest;
 import com.microsv.user_service.dto.request.UserUpdateRequest;
+import com.microsv.user_service.dto.response.UserAuthResponse;
 import com.microsv.user_service.dto.response.UserResponse;
 import com.microsv.user_service.entity.Role;
 import com.microsv.user_service.entity.User;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -108,6 +110,33 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(userId);
     }
 
+    @Override
+    public UserAuthResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email) // <-- Sửa ở đây
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        // Build chuỗi scope từ Role và Permission
+        Set<String> scopes = new HashSet<>();
+        user.getRoles().forEach(role -> {
+            scopes.add("ROLE_" + role.getRoleName().name());
+            if (role.getPermissions() != null) {
+                role.getPermissions().forEach(permission -> {
+                    scopes.add(permission.getPermissionName());
+                });
+            }
+        });
+
+
+        return UserAuthResponse.builder()
+                .userId(user.getUserId())
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .profile(user.getProfile())
+                .password(user.getPassword())
+                .roles(scopes)
+                .build();
+    }
+
     // Hàm helper để chuyển đổi từ Entity sang DTO Response
     private UserResponse toUserResponse(User user) {
         UserResponse response = new UserResponse();
@@ -120,4 +149,6 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet()));
         return response;
     }
+
+
 }
