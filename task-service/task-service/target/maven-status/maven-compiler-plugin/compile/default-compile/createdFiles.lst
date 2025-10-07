@@ -1,7 +1,11 @@
+com\microsv\task_service\dto\response\TaskStatisticResponse$TaskStatisticResponseBuilder.class
 com\microsv\task_service\service\NotificationService.class
 com\microsv\task_service\repository\ScheduleEventRepository.class
+com\microsv\task_service\entity\Task$TaskBuilder.class
+com\microsv\task_service\dto\request\TaskUpdateRequest.class
 com\microsv\task_service\dto\response\TaskResponse.class
 com\microsv\task_service\entity\PushSubscription.class
+com\microsv\task_service\dto\response\TaskStatisticResponse.class
 com\microsv\task_service\service\impl\NotificationServiceImpl.class
 com\microsv\task_service\controller\TaskController.class
 com\microsv\task_service\entity\Task.class
@@ -13,5 +17,7 @@ com\microsv\task_service\dto\request\TaskCreationRequest.class
 com\microsv\task_service\service\impl\TaskServiceImpl.class
 com\microsv\task_service\enumeration\PriorityLevel.class
 com\microsv\task_service\config\SecurityConfig.class
+com\microsv\task_service\dto\request\TaskUpdateRequest$TaskUpdateRequestBuilder.class
 com\microsv\task_service\repository\TaskRepository.class
+com\microsv\task_service\dto\response\TaskResponse$TaskResponseBuilder.class
 com\microsv\task_service\entity\ScheduleEvent.class

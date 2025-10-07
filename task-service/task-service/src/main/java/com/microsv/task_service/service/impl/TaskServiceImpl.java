@@ -1,20 +1,25 @@
 package com.microsv.task_service.service.impl;
 
 import com.microsv.task_service.dto.request.TaskCreationRequest;
+import com.microsv.task_service.dto.request.TaskUpdateRequest;
 import com.microsv.task_service.dto.response.TaskResponse;
+import com.microsv.task_service.dto.response.TaskStatisticResponse;
 import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.PriorityLevel;
 import com.microsv.task_service.enumeration.TaskStatus;
 import com.microsv.task_service.repository.TaskRepository;
-import com.microsv.task_service.service.NotificationService;
 import com.microsv.task_service.service.TaskService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -23,51 +28,172 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     TaskRepository taskRepository;
-    NotificationService notificationService; // Sẽ thêm sau
 
     @Override
     public TaskResponse createTask(TaskCreationRequest request, Long userId) {
-        Task task = new Task();
-        task.setTitle(request.getTitle());
-        task.setDescription(request.getDescription());
-        task.setDeadline(request.getDeadline());
-        task.setPriority(request.getPriority() != null ? request.getPriority() : PriorityLevel.MEDIUM);
-        task.setStatus(TaskStatus.TODO);
-        task.setUserId(userId);
+        validateDeadline(request.getDeadline());
+
+        Task task = Task.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .deadline(request.getDeadline())
+                .priority(request.getPriority() != null ? request.getPriority() : PriorityLevel.MEDIUM)
+                .status(TaskStatus.TODO)
+                .userId(userId)
+                .build();
 
         Task savedTask = taskRepository.save(task);
-
-        // Gửi thông báo khi tạo task mới (sẽ làm ở bước sau)
-        // notificationService.sendNotificationForNewTask(savedTask);
+        log.info("Task created successfully: {}", savedTask.getTaskId());
 
         return toTaskResponse(savedTask);
     }
 
     @Override
     public TaskResponse getTask(Long taskId, Long userId) {
-        return null;
+        Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Task not found or access denied"
+                ));
+        return toTaskResponse(task);
     }
 
     @Override
     public List<TaskResponse> getAllTasksByUser(Long userId) {
-        return List.of();
+        List<Task> tasks = taskRepository.findAllByUserId(userId);
+        return tasks.stream()
+                .map(this::toTaskResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public TaskResponse updateTask(Long taskId, TaskCreationRequest request, Long userId) {
-        return null;
+    public List<TaskResponse> getTasksByStatus(Long userId, TaskStatus status) {
+        List<Task> tasks = taskRepository.findAllByUserIdAndStatus(userId, status);
+        return tasks.stream()
+                .map(this::toTaskResponse)
+                .collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    public TaskResponse updateTask(Long taskId, TaskUpdateRequest request, Long userId) {
+        Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Task not found or access denied"
+                ));
+
+        if (request.getTitle() != null) {
+            task.setTitle(request.getTitle());
+        }
+        if (request.getDescription() != null) {
+            task.setDescription(request.getDescription());
+        }
+        if (request.getDeadline() != null) {
+            validateDeadline(request.getDeadline());
+            task.setDeadline(request.getDeadline());
+        }
+        if (request.getPriority() != null) {
+            task.setPriority(request.getPriority());
+        }
+        if (request.getStatus() != null) {
+            task.setStatus(request.getStatus());
+            if (request.getStatus() == TaskStatus.DONE) {
+                task.setCompletedAt(LocalDateTime.now());
+            }
+        }
+
+        Task updatedTask = taskRepository.save(task);
+        log.info("Task updated successfully: {}", taskId);
+
+        return toTaskResponse(updatedTask);
+    }
+
+    @Override
+    public TaskResponse updateTaskStatus(Long taskId, TaskStatus status, Long userId) {
+        Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Task not found or access denied"
+                ));
+
+        task.setStatus(status);
+        if (status == TaskStatus.DONE) {
+            task.setCompletedAt(LocalDateTime.now());
+        }
+
+        Task updatedTask = taskRepository.save(task);
+        log.info("Task status updated to {} for task: {}", status, taskId);
+
+        return toTaskResponse(updatedTask);
     }
 
     @Override
     public void deleteTask(Long taskId, Long userId) {
+        Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Task not found or access denied"
+                ));
 
+        taskRepository.delete(task);
+        log.info("Task deleted successfully: {}", taskId);
     }
 
-    // ... triển khai các phương thức còn lại (get, update, delete)
+    @Override
+    public List<TaskResponse> getUpcomingTasks(Long userId, Integer hours) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime deadlineLimit = now.plusHours(hours != null ? hours : 24);
+
+        List<Task> tasks = taskRepository.findAllByUserIdAndStatus(userId, TaskStatus.TODO)
+                .stream()
+                .filter(task -> task.getDeadline() != null &&
+                        task.getDeadline().isAfter(now) &&
+                        task.getDeadline().isBefore(deadlineLimit))
+                .collect(Collectors.toList());
+
+        return tasks.stream()
+                .map(this::toTaskResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public TaskStatisticResponse getTaskStatistics(Long userId) {
+        Long totalTasks = taskRepository.countByUserIdAndStatus(userId, null);
+        Long todoCount = taskRepository.countByUserIdAndStatus(userId, TaskStatus.TODO);
+        Long inProgressCount = taskRepository.countByUserIdAndStatus(userId, TaskStatus.IN_PROGRESS);
+        Long doneCount = taskRepository.countByUserIdAndStatus(userId, TaskStatus.DONE);
+
+        return TaskStatisticResponse.builder()
+                .totalTasks(totalTasks)
+                .todoCount(todoCount)
+                .inProgressCount(inProgressCount)
+                .doneCount(doneCount)
+                .completionRate(totalTasks > 0 ? (double) doneCount / totalTasks * 100 : 0)
+                .build();
+    }
+
+    private void validateDeadline(LocalDateTime deadline) {
+        if (deadline != null && deadline.isBefore(LocalDateTime.now())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Deadline must be in the future"
+            );
+        }
+    }
 
     private TaskResponse toTaskResponse(Task task) {
-        // Logic chuyển đổi từ Task Entity sang TaskResponse DTO
-        // ...
-        return null;
+        return TaskResponse.builder()
+                .taskId(task.getTaskId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .deadline(task.getDeadline())
+                .status(task.getStatus())
+                .priority(task.getPriority())
+                .createdAt(task.getCreatedAt())
+                .completedAt(task.getCompletedAt())
+                .userId(task.getUserId())
+                .build();
     }
 }

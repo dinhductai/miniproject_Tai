@@ -2,13 +2,20 @@ package com.microsv.task_service.entity;
 import com.microsv.task_service.enumeration.PriorityLevel;
 import com.microsv.task_service.enumeration.TaskStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "tasks")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Task {
 
     @Id
