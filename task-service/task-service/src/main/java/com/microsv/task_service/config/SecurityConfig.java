@@ -26,9 +26,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**") // 🔥 CHỈ DISABLE CSRF CHO API
-                )
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // PUBLIC APIS (nếu có) - ví dụ: health check, internal endpoints
                         .requestMatchers("/internal/**").permitAll()
