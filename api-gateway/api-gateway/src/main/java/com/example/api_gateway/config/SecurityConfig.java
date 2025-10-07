@@ -34,6 +34,12 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                         .pathMatchers("/eureka/**").permitAll()
+                        // === PROTECTED APIS (CẦN token) ===
+                        .pathMatchers("/api/users/**").authenticated()    // User operations
+                        .pathMatchers("/api/orders/**").authenticated()   // Order operations
+                        .pathMatchers("/api/products/**").authenticated() // Product operations
+                        .pathMatchers("/api/tasks/**").authenticated()    // Task operations
+                        .pathMatchers("/api/ai/**").authenticated()       // AI operations
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
