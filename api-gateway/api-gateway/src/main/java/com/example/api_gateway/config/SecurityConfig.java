@@ -29,16 +29,11 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .csrf(csrf -> csrf.disable()) // 🔥 GIỮ NGUYÊN NHƯ CŨ
                 .authorizeExchange(exchange -> exchange
-                        // === SỬA LẠI ĐƯỜNG DẪN Ở ĐÂY ===
-                        // Bỏ tiền tố service name trong pathMatchers
                         .pathMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/users/register").permitAll()
-
-                        // (Tùy chọn) Mở cả dashboard của Eureka
                         .pathMatchers("/eureka/**").permitAll()
-
                         .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -47,7 +42,6 @@ public class SecurityConfig {
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter())
                         )
                 );
-
         return http.build();
     }
 

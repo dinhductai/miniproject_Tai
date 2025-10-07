@@ -28,29 +28,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**") // 🔥 CHỈ DISABLE CHO API
+                )
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoint đăng ký vẫn public
                         .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
-
-                        // Endpoint nội bộ cho auth-service gọi đến cũng public
                         .requestMatchers("/internal/**").permitAll()
-
-                        // Yêu cầu quyền ADMIN để xem danh sách user hoặc xóa user
                         .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
-
-                        // Tất cả các request còn lại đều cần được xác thực
                         .anyRequest().authenticated()
                 )
-                // Cấu hình để service này trở thành một Resource Server
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
-                                .decoder(jwtDecoder()) // Dùng JwtDecoder để xác thực token
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter()) // Dùng converter để đọc scope
+                                .decoder(jwtDecoder())
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
                         )
                 );
-
         return http.build();
     }
 
