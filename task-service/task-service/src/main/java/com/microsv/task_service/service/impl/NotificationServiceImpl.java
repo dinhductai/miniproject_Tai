@@ -43,22 +43,24 @@ public class NotificationServiceImpl implements NotificationService {
     @Value("${vapid.private.key}")
     String privateKey;
 
+
+    //khởi tạo pushservice với cặp khóa
     @PostConstruct
     private void init() throws GeneralSecurityException {
-        // Đảm bảo BouncyCastle được đăng ký
+        //đảm bảo BouncyCastle được đăng ký
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
             Security.addProvider(new BouncyCastleProvider());
         }
 
-        // Khởi tạo PushService với cặp khóa VAPID
         this.pushService = new PushService(publicKey, privateKey);
-        log.info("✅ NotificationService initialized with VAPID keys.");
     }
 
+
+    //quét deadline và gửi tb
     @Override
-    @Scheduled(fixedRate = 30000) // 15 phút
+    @Scheduled(fixedRate = 30000) //set thời gian quét deadline , đang là 30s
     public void checkDeadlinesAndSendNotifications() {
-        log.info("⏰ Scanning for upcoming deadlines...");
+        log.info("scanning for upcoming deadlines");
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime inOneHour = now.plusHours(1);
 
@@ -68,12 +70,14 @@ public class NotificationServiceImpl implements NotificationService {
             List<PushSubscription> subscriptions = subscriptionRepository.findAllByUserId(task.getUserId());
 
             for (PushSubscription sub : subscriptions) {
-                String payload = String.format("Task '%s' is due soon!", task.getTitle());
+                String payload = String.format("task '%s' is due soon " , task.getTitle());
                 sendNotification(sub, payload);
             }
         }
     }
 
+
+    //lưu đăng ký nhận tb
     @Override
     public void subscribe(SubscriptionRequest request, Long userId) {
         PushSubscription subscription = new PushSubscription();
@@ -82,9 +86,9 @@ public class NotificationServiceImpl implements NotificationService {
         subscription.setP256dh(request.getP256dh());
         subscription.setAuth(request.getAuth());
         subscriptionRepository.save(subscription);
-        log.info("✅ New subscription saved for user {}", userId);
     }
 
+    //gửi thông báo trình duyệt
     public void sendNotification(PushSubscription subscription, String payload) {
         try {
             Notification notification = new Notification(
@@ -95,12 +99,10 @@ public class NotificationServiceImpl implements NotificationService {
             );
 
             pushService.send(notification);
-            log.info("📩 Sent notification to endpoint {}", subscription.getEndpoint());
 
         } catch (Exception e) {
-            log.error("❌ Error sending push notification: {}", e.getMessage());
-            // Nếu subscription không hợp lệ, có thể xóa đi:
-            // subscriptionRepository.delete(subscription);
+            log.error("Error sending push notification: {}", e.getMessage());
+            e.printStackTrace();
         }
     }
 }

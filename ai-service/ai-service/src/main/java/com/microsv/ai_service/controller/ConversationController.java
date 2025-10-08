@@ -39,8 +39,9 @@ public class ConversationController {
         if (conversationId == null || conversationId.isBlank()) {
             conversationId = UUID.randomUUID().toString();
         }
-        List<ChatAIResponse> chatAIResponses = chatAIService.chat(message, file,conversationId,userId);
+        String chatAIResponses = chatAIService.chat(message, file,conversationId,userId);
         ChatAIConversationResponse response = new ChatAIConversationResponse(conversationId,chatAIResponses);
         return ResponseEntity.ok(response);
     }
+
 }

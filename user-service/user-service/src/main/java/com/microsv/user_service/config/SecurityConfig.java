@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // Bật annotation @PreAuthorize nếu bạn muốn dùng sau này
+@EnableMethodSecurity //
 public class SecurityConfig {
 
     @Value("${jwt.secret}")
@@ -29,7 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**") // 🔥 CHỈ DISABLE CHO API
+                        .ignoringRequestMatchers("/api/**") //
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
@@ -47,7 +47,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Bean này sẽ đọc claim "scope" và chuyển nó thành các quyền (authorities)
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -58,7 +57,6 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-    // Bean này chịu trách nhiệm giải mã và xác thực chữ ký của JWT
     @Bean
     public JwtDecoder jwtDecoder() {
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HS384");

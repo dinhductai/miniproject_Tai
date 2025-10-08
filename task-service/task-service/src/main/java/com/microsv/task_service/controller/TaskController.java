@@ -23,7 +23,7 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    // CREATE - Tạo task mới
+    //tạo task mới
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskCreationRequest request,
                                                    @AuthenticationPrincipal Jwt jwt) {
@@ -32,7 +32,7 @@ public class TaskController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // READ - Lấy tất cả tasks của user
+    //lấy tất cả tasks của user
     @GetMapping
     public ResponseEntity<List<TaskResponse>> getTasks(@AuthenticationPrincipal Jwt jwt) {
         Long userId = Long.parseLong(jwt.getSubject());
@@ -40,7 +40,7 @@ public class TaskController {
         return ResponseEntity.ok(responses);
     }
 
-    // READ - Lấy task theo ID
+    //  lấy task theo id
     @GetMapping("/{taskId}")
     public ResponseEntity<TaskResponse> getTask(@PathVariable Long taskId,
                                                 @AuthenticationPrincipal Jwt jwt) {
@@ -49,7 +49,7 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    // READ - Lấy tasks theo status
+    //lấy tasks theo status
     @GetMapping("/status/{status}")
     public ResponseEntity<List<TaskResponse>> getTasksByStatus(@PathVariable TaskStatus status,
                                                                @AuthenticationPrincipal Jwt jwt) {
@@ -58,7 +58,7 @@ public class TaskController {
         return ResponseEntity.ok(responses);
     }
 
-    // READ - Lấy tasks sắp đến hạn
+    //lấy tasks sắp đến hạn
     @GetMapping("/upcoming")
     public ResponseEntity<List<TaskResponse>> getUpcomingTasks(
             @RequestParam(required = false, defaultValue = "24") Integer hours,
@@ -68,7 +68,7 @@ public class TaskController {
         return ResponseEntity.ok(responses);
     }
 
-    // READ - Lấy thống kê tasks
+    //lấy thống kê tasks
     @GetMapping("/statistics")
     public ResponseEntity<TaskStatisticResponse> getTaskStatistics(@AuthenticationPrincipal Jwt jwt) {
         Long userId = Long.parseLong(jwt.getSubject());
@@ -76,7 +76,7 @@ public class TaskController {
         return ResponseEntity.ok(statistics);
     }
 
-    // UPDATE - Cập nhật toàn bộ task
+    //Cập nhật toàn bộ task
     @PutMapping("/{taskId}")
     public ResponseEntity<TaskResponse> updateTask(@PathVariable Long taskId,
                                                    @Valid @RequestBody TaskUpdateRequest request,
@@ -86,7 +86,7 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    // UPDATE - Cập nhật status của task
+    // cập nhật status của task
     @PatchMapping("/{taskId}/status")
     public ResponseEntity<TaskResponse> updateTaskStatus(@PathVariable Long taskId,
                                                          @RequestParam TaskStatus status,
@@ -96,7 +96,7 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    // DELETE - Xóa task
+    //Xóa task
     @DeleteMapping("/{taskId}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long taskId,
                                            @AuthenticationPrincipal Jwt jwt) {

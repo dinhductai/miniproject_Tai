@@ -23,7 +23,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        // Gọi service để xác thực và tạo token
+        //gọi service để xác thực và tạo token
         AuthenticationResponse checkAuthenticate = null;
         try {
             checkAuthenticate = authenticationService.authenticate(request);

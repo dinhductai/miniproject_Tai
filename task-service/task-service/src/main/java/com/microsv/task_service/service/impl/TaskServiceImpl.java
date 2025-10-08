@@ -43,8 +43,6 @@ public class TaskServiceImpl implements TaskService {
                 .build();
 
         Task savedTask = taskRepository.save(task);
-        log.info("Task created successfully: {}", savedTask.getTaskId());
-
         return toTaskResponse(savedTask);
     }
 
@@ -83,20 +81,13 @@ public class TaskServiceImpl implements TaskService {
                         HttpStatus.NOT_FOUND,
                         "Task not found or access denied"
                 ));
+        task.setTitle(request.getTitle());
+        task.setDescription(request.getDescription());
 
-        if (request.getTitle() != null) {
-            task.setTitle(request.getTitle());
-        }
-        if (request.getDescription() != null) {
-            task.setDescription(request.getDescription());
-        }
-        if (request.getDeadline() != null) {
-            validateDeadline(request.getDeadline());
-            task.setDeadline(request.getDeadline());
-        }
-        if (request.getPriority() != null) {
-            task.setPriority(request.getPriority());
-        }
+        validateDeadline(request.getDeadline());
+
+        task.setDeadline(request.getDeadline());
+        task.setPriority(request.getPriority());
         if (request.getStatus() != null) {
             task.setStatus(request.getStatus());
             if (request.getStatus() == TaskStatus.DONE) {
@@ -105,7 +96,6 @@ public class TaskServiceImpl implements TaskService {
         }
 
         Task updatedTask = taskRepository.save(task);
-        log.info("Task updated successfully: {}", taskId);
 
         return toTaskResponse(updatedTask);
     }
@@ -124,7 +114,6 @@ public class TaskServiceImpl implements TaskService {
         }
 
         Task updatedTask = taskRepository.save(task);
-        log.info("Task status updated to {} for task: {}", status, taskId);
 
         return toTaskResponse(updatedTask);
     }
@@ -138,7 +127,6 @@ public class TaskServiceImpl implements TaskService {
                 ));
 
         taskRepository.delete(task);
-        log.info("Task deleted successfully: {}", taskId);
     }
 
     @Override
@@ -174,6 +162,7 @@ public class TaskServiceImpl implements TaskService {
                 .build();
     }
 
+    //bắt lỗi deadline đặt ở quá khứ
     private void validateDeadline(LocalDateTime deadline) {
         if (deadline != null && deadline.isBefore(LocalDateTime.now())) {
             throw new ResponseStatusException(

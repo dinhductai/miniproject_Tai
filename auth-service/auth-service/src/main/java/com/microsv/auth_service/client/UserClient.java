@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "user-service") // Tên của service cần gọi (đăng ký trên Eureka)
 public interface UserClient {
 
-    // Khai báo phương thức khớp với API nội bộ của user-service
+    //khai báo phương thức khớp với API nội bộ của user-service
     @GetMapping("/internal/users/{email}")
     UserAuthResponse getUserAuthDetails(@PathVariable("email") String email);
 }

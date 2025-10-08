@@ -35,7 +35,7 @@ import java.util.*;
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    UserClient userClient; // <-- Tiêm Feign Client
+    UserClient userClient;
     InvalidatedTokenRepository invalidatedTokenRepository;
     AuthenticationUtil authenticationUtil;
 
@@ -128,17 +128,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+
+    // cách này thì scope bị ngược
 //    private String buildScope(Set<String> setRolePermission) {
 //        // Nối tất cả các phần tử trong Set bằng một dấu cách " "
 //        return String.join(" ", setRolePermission);
 //    }
 
     private String buildScope(Set<String> setRolePermission) {
-        // 1. Tạo hai danh sách riêng để lưu trữ roles và permissions
+        // tạo hai danh sách riêng để lưu trữ roles và permissions
         List<String> roles = new ArrayList<>();
         List<String> permissions = new ArrayList<>();
 
-        // 2. Phân loại các phần tử từ Set vào hai danh sách
+        //phân loại các phần tử từ Set vào hai danh sách
         for (String scope : setRolePermission) {
             if (scope.startsWith("ROLE_")) {
                 roles.add(scope);
@@ -147,15 +149,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
         }
 
-        // (Tùy chọn) Sắp xếp từng danh sách để kết quả luôn nhất quán
+        // sắp xếp từng danh sách để kết quả luôn nhất quán
         Collections.sort(roles);
         Collections.sort(permissions);
 
-        // 3. Gộp hai danh sách lại, roles luôn ở trước
+        // gộp hai danh sách lại, roles luôn ở trước
         List<String> orderedScopes = new ArrayList<>(roles);
         orderedScopes.addAll(permissions);
 
-        // 4. Sử dụng logic StringBuilder của bạn trên danh sách đã được sắp xếp
+        // sử dụng logic StringBuilder của bạn trên danh sách đã được sắp xếp
         StringBuilder stringBuilder = new StringBuilder();
         for (String scope : orderedScopes) {
             if (stringBuilder.length() > 0) {

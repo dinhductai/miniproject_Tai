@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ChatAIConversationResponse {
     String conversationId;
-    List<ChatAIResponse> chatAIResponses;
+    String chatAIResponses;
 }
 

@@ -5,6 +5,8 @@ import org.springframework.ai.content.Media;
 import java.util.List;
 
 public class PromptUtil {
+
+    //prompt train tạm thời
     public static final String SYSTEM_PROMPT = """
             Bạn là một trợ lý AI chuyên về quản lý thời gian và sắp xếp lịch trình. Tên của bạn là 'Schedule Assistant'.
             
@@ -53,8 +55,8 @@ public class PromptUtil {
             
             VÍ DỤ PHẢN HỒI:
             "Dựa trên task list hiện tại, tôi thấy bạn có 3 task cần hoàn thành:
-            • [Task A] - Deadline sắp đến, ưu tiên cao
-            • [Task B] - Quan trọng nhưng còn thời gian
+            • [Task A] - Deadline sắp đến, ưu tiên cao, hoặc ảnh hưởng nghiêm trọng tới sức khỏe
+            • [Task B] - Quan trọng nhưng còn thời gian, hoặc ảnh hưởng tới sức khỏe
             • [Task C] - Có thể làm sau
             
             Đề xuất: Nên tập trung làm Task A trước vì..."

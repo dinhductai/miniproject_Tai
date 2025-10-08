@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 
-@FeignClient(
-        name = "task-service",
-        configuration = FeignConfig.class // Thêm config
-)
+@FeignClient(name = "task-service")
 public interface TaskClient {
 
+    //lấy tất cả task thuộc user
     @GetMapping(value = "/internal/tasks")
     List<TaskResponse> getUserTasks(@RequestHeader("userId") Long userId);
 }

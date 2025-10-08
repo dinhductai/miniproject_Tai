@@ -28,23 +28,17 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                                // PUBLIC APIS (nếu có) - ví dụ: health check, internal endpoints
                                 .requestMatchers("/internal/**").permitAll()
-//                        .requestMatchers("/actuator/health").permitAll()
 
-                                // TASK APIS - TẤT CẢ CẦN AUTHENTICATION
-                                .requestMatchers(HttpMethod.GET, "/api/ai").authenticated()     // Get all tasks
-                                .requestMatchers(HttpMethod.GET, "/api/ai/**").authenticated()  // Get task by id
-                                .requestMatchers(HttpMethod.POST, "/api/ai").authenticated()    // Create task
-                                .requestMatchers(HttpMethod.PUT, "/api/ai/**").authenticated()  // Update task
-                                .requestMatchers(HttpMethod.DELETE, "/api/ai/**").authenticated() // Delete task
+                                .requestMatchers(HttpMethod.GET, "/api/ai").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/api/ai/**").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/api/ai").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/api/ai/**").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/api/ai/**").authenticated()
 
-                                // HOẶC đơn giản hơn - tất cả task APIs đều cần auth:
-                                // .requestMatchers("/api/tasks/**").authenticated()
-// Có thể thêm phân quyền chi tiết sau:
                                 .requestMatchers(HttpMethod.GET, "/api/ai/admin").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/api/ai/**").hasAnyRole("ADMIN")
-                                .anyRequest().authenticated() // Mặc định tất cả APIs khác cần auth
+                                .anyRequest().authenticated() //mặc định tất cả APIs khác cần auth
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
@@ -56,7 +50,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Bean này sẽ đọc claim "scope" và chuyển nó thành các quyền (authorities)
+    //bean này sẽ đọc claim "scope" và chuyển nó thành các quyền (authorities)
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -68,7 +62,7 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-    // Bean này chịu trách nhiệm giải mã và xác thực chữ ký của JWT
+    //bean này chịu trách nhiệm giải mã và xác thực chữ ký của JWT
     @Bean
     public JwtDecoder jwtDecoder() {
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HS384");

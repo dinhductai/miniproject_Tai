@@ -28,23 +28,18 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // PUBLIC APIS (nếu có) - ví dụ: health check, internal endpoints
                         .requestMatchers("/internal/**").permitAll()
-//                        .requestMatchers("/actuator/health").permitAll()
 
-                        // TASK APIS - TẤT CẢ CẦN AUTHENTICATION
-                        .requestMatchers(HttpMethod.GET, "/api/tasks").authenticated()     // Get all tasks
-                        .requestMatchers(HttpMethod.GET, "/api/tasks/**").authenticated()  // Get task by id
-                        .requestMatchers(HttpMethod.POST, "/api/tasks").authenticated()    // Create task
-                        .requestMatchers(HttpMethod.PUT, "/api/tasks/**").authenticated()  // Update task
-                        .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").authenticated() // Delete task
+                        .requestMatchers(HttpMethod.GET, "/api/tasks").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/tasks/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/tasks").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/tasks/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").authenticated()
 
-                        // HOẶC đơn giản hơn - tất cả task APIs đều cần auth:
-                        // .requestMatchers("/api/tasks/**").authenticated()
-// Có thể thêm phân quyền chi tiết sau:
+
                         .requestMatchers(HttpMethod.GET, "/api/tasks/admin").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/tasks/**").hasAnyRole("ADMIN")
-                        .anyRequest().authenticated() // Mặc định tất cả APIs khác cần auth
+                        .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
@@ -56,21 +51,22 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // Bean này sẽ đọc claim "scope" và chuyển nó thành các quyền (authorities)
+    //đọc scope và chuyển nó thành các quyền
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("scope"); // Đọc từ claim "scope"
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix(""); // Bỏ tiền tố "SCOPE_"
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("scope");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         return jwtAuthenticationConverter;
     }
 
-    // Bean này chịu trách nhiệm giải mã và xác thực chữ ký của JWT
+    //giải mã và xác thực chữ ký của token
     @Bean
     public JwtDecoder jwtDecoder() {
+        //chuyển từ 512 sang 384 vì bị lỗi ko hỗ trợ, dù có suggest
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HS384");
         return NimbusJwtDecoder
                 .withSecretKey(secretKeySpec)

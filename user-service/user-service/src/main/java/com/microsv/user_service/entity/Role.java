@@ -24,8 +24,7 @@ public class Role {
     @Column(name = "role_name", nullable = false, unique = true)
     private RoleName roleName;
 
-    // Quan hệ Nhiều-Nhiều: Một Role có nhiều Permission
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER) //
     @JoinTable(
             name = "roles_permissions",
             joinColumns = @JoinColumn(name = "role_id"),

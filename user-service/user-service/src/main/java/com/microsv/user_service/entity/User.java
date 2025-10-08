@@ -31,7 +31,6 @@ public class User {
     @Column(name = "profile")
     private String profile;
 
-    // Quan hệ Nhiều-Nhiều: Một User có thể có nhiều Role
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",

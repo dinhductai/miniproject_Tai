@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    // Hàm helper để chuyển đổi từ Entity sang DTO Response
+    // hàm helper để chuyển đổi từ Entity sang DTO Response
     private UserResponse toUserResponse(User user) {
         UserResponse response = new UserResponse();
         response.setUserId(user.getUserId());

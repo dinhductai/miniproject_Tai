@@ -10,7 +10,6 @@ public class ApplicationConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Sử dụng BCryptPasswordEncoder, một chuẩn mã hóa mạnh
         return new BCryptPasswordEncoder();
     }
 

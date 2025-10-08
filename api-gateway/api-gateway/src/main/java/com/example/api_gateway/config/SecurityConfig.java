@@ -26,15 +26,15 @@ public class SecurityConfig {
     @Value("${jwt.secret}")
     private String secretKey;
 
+    //cấu hình quy tắc bảo mật
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
-                .csrf(csrf -> csrf.disable()) // 🔥 GIỮ NGUYÊN NHƯ CŨ
+                .csrf(csrf -> csrf.disable())
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                         .pathMatchers("/eureka/**").permitAll()
-                        // === PROTECTED APIS (CẦN token) ===
                         .pathMatchers("/api/users/**").authenticated()    // User operations
                         .pathMatchers("/api/orders/**").authenticated()   // Order operations
                         .pathMatchers("/api/products/**").authenticated() // Product operations
@@ -51,6 +51,8 @@ public class SecurityConfig {
         return http.build();
     }
 
+
+    //chuyển quyền từ scope sang user, admin mà security cs thể nhận biết đc
     @Bean
     public ReactiveJwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
@@ -59,8 +61,7 @@ public class SecurityConfig {
         grantedAuthoritiesConverter.setAuthorityPrefix("");
 
         ReactiveJwtAuthenticationConverter converter = new ReactiveJwtAuthenticationConverter();
-        // JwtGrantedAuthoritiesConverter.convert(jwt) trả về Collection<GrantedAuthority>
-        // cần đổi thành Flux<GrantedAuthority> cho ReactiveJwtAuthenticationConverter
+
         converter.setJwtGrantedAuthoritiesConverter(jwt ->
                 Flux.fromIterable(grantedAuthoritiesConverter.convert(jwt))
         );
@@ -68,8 +69,11 @@ public class SecurityConfig {
         return converter;
     }
 
+
+    //dùng thuật toán để giải mã và xác minh token
     @Bean
     public ReactiveJwtDecoder reactiveJwtDecoder() {
+        //chuyển qua 384 vì 512 đang bị lỗi ko đc hỗ trợ, mặc dù vẫn đc gợi ý( xử lý tạm thời)
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA384");
         return NimbusReactiveJwtDecoder
                 .withSecretKey(secretKeySpec)
@@ -77,6 +81,7 @@ public class SecurityConfig {
                 .build();
     }
 
+    //xử lý ng dùng chưa đăng nhập hoặc token ko hợp lệ
     @Bean
     public ServerAuthenticationEntryPoint authenticationEntryPoint() {
         return new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED);
