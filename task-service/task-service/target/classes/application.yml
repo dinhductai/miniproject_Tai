@@ -25,3 +25,9 @@ eureka:
 # THÊM DÒNG NÀY
 jwt:
   secret: A9mK2pX8vS4rW7tF1yD3bJ6nL0zQ5hG2eR9cU4xT8sV1wM7oP3lY6jN5iC
+
+vapid:
+  public:
+    key: BFG7k2HpM5dHTwC2Noi-EMKSR1MUpUdQa2SrqufF1CFVoP6NlGw-V3Zgf6A90yCYBsHwSFMukGuO9tVHZWSWWhI
+  private:
+    key: sr6h7NtAUmladak2iqc38u8ylRyI8d38Vb6d0LiJfIQ
