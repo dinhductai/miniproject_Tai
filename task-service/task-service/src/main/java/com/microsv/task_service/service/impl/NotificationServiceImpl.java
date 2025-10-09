@@ -52,7 +52,7 @@ public class NotificationServiceImpl implements NotificationService {
             Security.addProvider(new BouncyCastleProvider());
         }
 
-        this.pushService = new PushService(publicKey, privateKey);
+        this.pushService = new PushService(publicKey, privateKey, "mailto:dinhductai2501@gmail.com"); //URI scheme
     }
 
 
