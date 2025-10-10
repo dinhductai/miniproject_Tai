@@ -1,9 +1,12 @@
 package com.microsv.task_service.service.impl;
 
+import com.microsv.common.enumeration.ErrorCode;
+import com.microsv.common.exception.BaseException;
 import com.microsv.task_service.dto.request.SubscriptionRequest;
 import com.microsv.task_service.entity.PushSubscription;
 import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.TaskStatus;
+import com.microsv.task_service.mapper.NotificationMapper;
 import com.microsv.task_service.repository.PushSubscriptionRepository;
 import com.microsv.task_service.repository.TaskRepository;
 import com.microsv.task_service.service.NotificationService;
@@ -33,7 +36,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     TaskRepository taskRepository;
     PushSubscriptionRepository subscriptionRepository;
-
+    NotificationMapper notificationMapper;
     // PushService không final vì khởi tạo sau trong @PostConstruct
     PushService pushService;
 
@@ -80,12 +83,11 @@ public class NotificationServiceImpl implements NotificationService {
     //lưu đăng ký nhận tb
     @Override
     public void subscribe(SubscriptionRequest request, Long userId) {
-        PushSubscription subscription = new PushSubscription();
-        subscription.setUserId(userId);
-        subscription.setEndpoint(request.getEndpoint());
-        subscription.setP256dh(request.getP256dh());
-        subscription.setAuth(request.getAuth());
-        subscriptionRepository.save(subscription);
+        try {
+            subscriptionRepository.save(notificationMapper.toPushSubscription(request, userId));
+        }catch (Exception e) {
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     //gửi thông báo trình duyệt
@@ -101,8 +103,7 @@ public class NotificationServiceImpl implements NotificationService {
             pushService.send(notification);
 
         } catch (Exception e) {
-            log.error("Error sending push notification: {}", e.getMessage());
-            e.printStackTrace();
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
         }
     }
 }

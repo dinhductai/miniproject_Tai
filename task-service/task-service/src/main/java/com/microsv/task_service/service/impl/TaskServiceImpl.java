@@ -1,5 +1,7 @@
 package com.microsv.task_service.service.impl;
 
+import com.microsv.common.enumeration.ErrorCode;
+import com.microsv.common.exception.BaseException;
 import com.microsv.task_service.dto.request.TaskCreationRequest;
 import com.microsv.task_service.dto.request.TaskUpdateRequest;
 import com.microsv.task_service.dto.response.TaskResponse;
@@ -7,8 +9,10 @@ import com.microsv.task_service.dto.response.TaskStatisticResponse;
 import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.PriorityLevel;
 import com.microsv.task_service.enumeration.TaskStatus;
+import com.microsv.task_service.mapper.TaskMapper;
 import com.microsv.task_service.repository.TaskRepository;
 import com.microsv.task_service.service.TaskService;
+import com.microsv.task_service.util.DateUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -17,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,65 +31,66 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class TaskServiceImpl implements TaskService {
-
+    TaskMapper taskMapper;
     TaskRepository taskRepository;
 
     @Override
     public TaskResponse createTask(TaskCreationRequest request, Long userId) {
-        validateDeadline(request.getDeadline());
-
-        Task task = Task.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .deadline(request.getDeadline())
-                .priority(request.getPriority() != null ? request.getPriority() : PriorityLevel.MEDIUM)
-                .status(TaskStatus.TODO)
-                .userId(userId)
-                .build();
-
-        Task savedTask = taskRepository.save(task);
-        return toTaskResponse(savedTask);
+        try {
+            DateUtil.ValidateDeadline(request.getDeadline());
+            Task savedTask = taskRepository.save(taskMapper.taskCreationRequestToTask(request, userId));
+            return taskMapper.toTaskResponse(savedTask);
+        }catch (Exception e){
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
     public TaskResponse getTask(Long taskId, Long userId) {
-        Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Task not found or access denied"
-                ));
-        return toTaskResponse(task);
+        try {
+            Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+            return taskMapper.toTaskResponse(task);
+        }catch (Exception e){
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
     public List<TaskResponse> getAllTasksByUser(Long userId) {
-        List<Task> tasks = taskRepository.findAllByUserId(userId);
-        return tasks.stream()
-                .map(this::toTaskResponse)
-                .collect(Collectors.toList());
+        try {
+            List<Task> tasks = taskRepository.findAllByUserId(userId);
+            return tasks.stream()
+                    .map(taskMapper::toTaskResponse)
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+        throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+    }
     }
 
     @Override
     public List<TaskResponse> getTasksByStatus(Long userId, TaskStatus status) {
-        List<Task> tasks = taskRepository.findAllByUserIdAndStatus(userId, status);
-        return tasks.stream()
-                .map(this::toTaskResponse)
-                .collect(Collectors.toList());
+        try {
+            List<Task> tasks = taskRepository.findAllByUserIdAndStatus(userId, status);
+            return tasks.stream()
+                    .map(taskMapper::toTaskResponse)
+                    .collect(Collectors.toList());
+        }catch (Exception e){
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
 
 
     @Override
     public TaskResponse updateTask(Long taskId, TaskUpdateRequest request, Long userId) {
+        try{
         Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Task not found or access denied"
-                ));
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
 
-        validateDeadline(request.getDeadline());
+        DateUtil.ValidateDeadline(request.getDeadline());
 
         task.setDeadline(request.getDeadline());
         task.setPriority(request.getPriority());
@@ -94,19 +100,18 @@ public class TaskServiceImpl implements TaskService {
                 task.setCompletedAt(LocalDateTime.now());
             }
         }
-
         Task updatedTask = taskRepository.save(task);
-
-        return toTaskResponse(updatedTask);
+        return taskMapper.toTaskResponse(updatedTask);
+        }catch (Exception e){
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
     public TaskResponse updateTaskStatus(Long taskId, TaskStatus status, Long userId) {
+        try{
         Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Task not found or access denied"
-                ));
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
         task.setStatus(status);
         if (status == TaskStatus.DONE) {
@@ -115,35 +120,44 @@ public class TaskServiceImpl implements TaskService {
 
         Task updatedTask = taskRepository.save(task);
 
-        return toTaskResponse(updatedTask);
+        return taskMapper.toTaskResponse(updatedTask);
+        }catch (Exception e){
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
     public void deleteTask(Long taskId, Long userId) {
-        Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Task not found or access denied"
-                ));
+        try {
+            Task task = taskRepository.findByTaskIdAndUserId(taskId, userId)
+                    .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
-        taskRepository.delete(task);
+            taskRepository.delete(task);
+        }catch (Exception e){
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
     public List<TaskResponse> getUpcomingTasks(Long userId, Integer hours) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime deadlineLimit = now.plusHours(hours != null ? hours : 24);
+        try {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime deadlineLimit = now.plusHours(hours != null ? hours : 24);
 
-        List<Task> tasks = taskRepository.findAllByUserIdAndStatus(userId, TaskStatus.TODO)
-                .stream()
-                .filter(task -> task.getDeadline() != null &&
-                        task.getDeadline().isAfter(now) &&
-                        task.getDeadline().isBefore(deadlineLimit))
-                .collect(Collectors.toList());
+            List<Task> tasks = taskRepository.findAllByUserIdAndStatus(userId, TaskStatus.TODO)
+                    .stream()
+                    .filter(task -> task.getDeadline() != null &&
+                            task.getDeadline().isAfter(now) &&
+                            task.getDeadline().isBefore(deadlineLimit))
+                    .collect(Collectors.toList());
 
-        return tasks.stream()
-                .map(this::toTaskResponse)
-                .collect(Collectors.toList());
+            return tasks.stream()
+                    .map(taskMapper::toTaskResponse)
+                    .collect(Collectors.toList());
+        }
+        catch (Exception e){
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
@@ -162,27 +176,7 @@ public class TaskServiceImpl implements TaskService {
                 .build();
     }
 
-    //bắt lỗi deadline đặt ở quá khứ
-    private void validateDeadline(LocalDateTime deadline) {
-        if (deadline != null && deadline.isBefore(LocalDateTime.now())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Deadline must be in the future"
-            );
-        }
-    }
 
-    private TaskResponse toTaskResponse(Task task) {
-        return TaskResponse.builder()
-                .taskId(task.getTaskId())
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .deadline(task.getDeadline())
-                .status(task.getStatus())
-                .priority(task.getPriority())
-                .createdAt(task.getCreatedAt())
-                .completedAt(task.getCompletedAt())
-                .userId(task.getUserId())
-                .build();
-    }
+
+
 }
