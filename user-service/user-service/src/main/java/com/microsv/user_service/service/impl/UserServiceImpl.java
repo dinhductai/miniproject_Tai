@@ -1,5 +1,7 @@
 package com.microsv.user_service.service.impl;
 
+import com.microsv.common.enumeration.ErrorCode;
+import com.microsv.common.exception.BaseException;
 import com.microsv.user_service.dto.request.UserCreationRequest;
 import com.microsv.user_service.dto.request.UserUpdateRequest;
 import com.microsv.user_service.dto.response.UserAuthResponse;
@@ -16,7 +18,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,101 +32,139 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Transactional
 public class UserServiceImpl implements UserService {
-
     UserRepository userRepository;
     RoleRepository roleRepository;
     PermissionRepository permissionRepository;
     PasswordEncoder passwordEncoder;
+
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new BaseException(ErrorCode.USER_NOT_FOUND);
+        }
+        return users;
     }
 
     @Override
     public User getUserById(Long id) {
+        if (id == null) {
+            throw new BaseException(ErrorCode.INVALID_USER_ID);
+        }
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
     public User createUser(User user) {
-        if (userRepository.findByEmail(user.getEmail())!=null) {
-            throw new RuntimeException("Email already exists: " + user.getEmail());
+        if (user == null) {
+            throw new BaseException(ErrorCode.INVALID_INPUT);
         }
-        return userRepository.save(user);
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new BaseException(ErrorCode.EMAIL_ALREADY_IN_USE);
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        try {
+            return userRepository.save(user);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
     public UserResponse createUser(UserCreationRequest request) {
-        if (userRepository.findByUserName(request.getUserName()).isPresent()) {
-            throw new RuntimeException("Username exists");
+        if (request == null) {
+            throw new BaseException(ErrorCode.INVALID_INPUT);
         }
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new BaseException(ErrorCode.EMAIL_ALREADY_IN_USE);
+        }
+        Role userRole = roleRepository.findByRoleName(RoleName.USER)
+                .orElseThrow(() -> new BaseException(ErrorCode.ROLE_NOT_FOUND));
 
         User user = new User();
         user.setUserName(request.getUserName());
         user.setEmail(request.getEmail());
         user.setProfile(request.getProfile());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        // Gán vai trò USER mặc định
-        Role userRole = roleRepository.findByRoleName(RoleName.USER)
-                .orElseThrow(() -> new RuntimeException("Default role 'USER' not found"));
         user.setRoles(Set.of(userRole));
 
-        User savedUser = userRepository.save(user);
-        return toUserResponse(savedUser);    }
+        try {
+            User savedUser = userRepository.save(user);
+            return toUserResponse(savedUser);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
+    }
 
     @Override
     public UserResponse getUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
         return toUserResponse(user);
     }
 
     @Override
     public UserResponse updateUser(Long userId, UserUpdateRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
         if (request.getPassword() != null && !request.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
-        if (request.getUserName() != null) {
+        if (request.getUserName() != null && !request.getUserName().isEmpty()) {
+            if (userRepository.findByUserName(request.getUserName()).isPresent()) {
+                throw new BaseException(ErrorCode.USER_ALREADY_EXISTS);
+            }
             user.setUserName(request.getUserName());
         }
-        if (request.getEmail() != null) {
+        if (request.getEmail() != null && !request.getEmail().isEmpty()) {
+            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+                throw new BaseException(ErrorCode.EMAIL_ALREADY_IN_USE);
+            }
             user.setEmail(request.getEmail());
         }
         if (request.getProfile() != null) {
             user.setProfile(request.getProfile());
         }
 
-        User updatedUser = userRepository.save(user);
-        return toUserResponse(updatedUser);
+        try {
+            User updatedUser = userRepository.save(user);
+            return toUserResponse(updatedUser);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new RuntimeException("User not found");
+            throw new BaseException(ErrorCode.USER_NOT_FOUND);
         }
-        userRepository.deleteById(userId);
+
+        try {
+            userRepository.deleteById(userId);
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
+        }
     }
 
     @Override
     public UserAuthResponse getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email) // <-- Sửa ở đây
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        if (email == null || email.isEmpty()) {
+            throw new BaseException(ErrorCode.INVALID_INPUT);
+        }
 
-        // Build chuỗi scope từ Role và Permission
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+
         Set<String> scopes = new HashSet<>();
         user.getRoles().forEach(role -> {
             scopes.add("ROLE_" + role.getRoleName().name());
             if (role.getPermissions() != null) {
-                role.getPermissions().forEach(permission -> {
-                    scopes.add(permission.getPermissionName());
-                });
+                role.getPermissions().forEach(permission -> scopes.add(permission.getPermissionName()));
             }
         });
-
 
         return UserAuthResponse.builder()
                 .userId(user.getUserId())
@@ -137,18 +176,17 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    // hàm helper để chuyển đổi từ Entity sang DTO Response
     private UserResponse toUserResponse(User user) {
         UserResponse response = new UserResponse();
         response.setUserId(user.getUserId());
-        response.setUserName(user.getUserName()); // Lấy từ userName
+        response.setUserName(user.getUserName());
         response.setEmail(user.getEmail());
         response.setProfile(user.getProfile());
-        response.setRoles(user.getRoles().stream()
-                .map(role -> role.getRoleName().name())
-                .collect(Collectors.toSet()));
+        response.setRoles(
+                user.getRoles().stream()
+                        .map(role -> role.getRoleName().name())
+                        .collect(Collectors.toSet())
+        );
         return response;
     }
-
-
 }

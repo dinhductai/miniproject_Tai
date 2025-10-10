@@ -1,6 +1,5 @@
 package com.microsv.user_service.util;
 
-import com.microsv.user_service.exception.custom.IllegalArgumentExceptionCustom;
 
 import java.util.List;
 
