@@ -9,6 +9,7 @@ import com.microsv.user_service.dto.response.UserResponse;
 import com.microsv.user_service.entity.Role;
 import com.microsv.user_service.entity.User;
 import com.microsv.user_service.enumeration.RoleName;
+import com.microsv.user_service.mapper.UserMapper;
 import com.microsv.user_service.repository.PermissionRepository;
 import com.microsv.user_service.repository.RoleRepository;
 import com.microsv.user_service.repository.UserRepository;
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
     RoleRepository roleRepository;
     PermissionRepository permissionRepository;
     PasswordEncoder passwordEncoder;
+    UserMapper userMapper;
 
     @Override
     public List<User> getAllUsers() {
@@ -81,17 +83,9 @@ public class UserServiceImpl implements UserService {
         }
         Role userRole = roleRepository.findByRoleName(RoleName.USER)
                 .orElseThrow(() -> new BaseException(ErrorCode.ROLE_NOT_FOUND));
-
-        User user = new User();
-        user.setUserName(request.getUserName());
-        user.setEmail(request.getEmail());
-        user.setProfile(request.getProfile());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRoles(Set.of(userRole));
-
         try {
-            User savedUser = userRepository.save(user);
-            return toUserResponse(savedUser);
+            User savedUser = userRepository.save(userMapper.toCreateUser(request,userRole));
+            return userMapper.toUserResponse(savedUser);
         } catch (Exception e) {
             throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
         }
@@ -101,36 +95,15 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
-        return toUserResponse(user);
+        return userMapper.toUserResponse(user);
     }
 
     @Override
     public UserResponse updateUser(Long userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
-
-        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
-        }
-        if (request.getUserName() != null && !request.getUserName().isEmpty()) {
-            if (userRepository.findByUserName(request.getUserName()).isPresent()) {
-                throw new BaseException(ErrorCode.USER_ALREADY_EXISTS);
-            }
-            user.setUserName(request.getUserName());
-        }
-        if (request.getEmail() != null && !request.getEmail().isEmpty()) {
-            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-                throw new BaseException(ErrorCode.EMAIL_ALREADY_IN_USE);
-            }
-            user.setEmail(request.getEmail());
-        }
-        if (request.getProfile() != null) {
-            user.setProfile(request.getProfile());
-        }
-
         try {
-            User updatedUser = userRepository.save(user);
-            return toUserResponse(updatedUser);
+            return userMapper.toUserResponse(userRepository.save(userMapper.toUpdateUser(request,user)));
         } catch (Exception e) {
             throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
         }
@@ -141,7 +114,6 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(userId)) {
             throw new BaseException(ErrorCode.USER_NOT_FOUND);
         }
-
         try {
             userRepository.deleteById(userId);
         } catch (Exception e) {
@@ -154,7 +126,6 @@ public class UserServiceImpl implements UserService {
         if (email == null || email.isEmpty()) {
             throw new BaseException(ErrorCode.INVALID_INPUT);
         }
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
 
@@ -166,27 +137,8 @@ public class UserServiceImpl implements UserService {
             }
         });
 
-        return UserAuthResponse.builder()
-                .userId(user.getUserId())
-                .userName(user.getUserName())
-                .email(user.getEmail())
-                .profile(user.getProfile())
-                .password(user.getPassword())
-                .roles(scopes)
-                .build();
+        return userMapper.toUserAuthResponse(user,scopes);
     }
 
-    private UserResponse toUserResponse(User user) {
-        UserResponse response = new UserResponse();
-        response.setUserId(user.getUserId());
-        response.setUserName(user.getUserName());
-        response.setEmail(user.getEmail());
-        response.setProfile(user.getProfile());
-        response.setRoles(
-                user.getRoles().stream()
-                        .map(role -> role.getRoleName().name())
-                        .collect(Collectors.toSet())
-        );
-        return response;
-    }
+
 }

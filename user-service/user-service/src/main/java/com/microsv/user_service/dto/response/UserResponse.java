@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-
+@Builder
 public class UserResponse {
     private Long userId;
     private String userName;
