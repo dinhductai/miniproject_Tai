@@ -1,6 +1,7 @@
 com\microsv\ai_service\enumeration\PriorityLevel.class
 com\microsv\ai_service\enumeration\TaskStatus.class
 com\microsv\ai_service\client\TaskClient.class
+com\microsv\ai_service\exception\GlobalExceptionHandler.class
 com\microsv\ai_service\service\ChatAIService.class
 com\microsv\ai_service\service\impl\ChatAIServiceImpl.class
 com\microsv\ai_service\entity\ConversationMemory$ConversationMemoryBuilder.class
@@ -12,6 +13,7 @@ com\microsv\ai_service\dto\response\ChatAIConversationResponse$ChatAIConversatio
 com\microsv\ai_service\dto\response\TaskResponse.class
 com\microsv\ai_service\dto\response\ChatAIResponse.class
 com\microsv\ai_service\dto\response\TaskResponse$TaskResponseBuilder.class
+com\microsv\ai_service\dto\request\ChatAIRequest.class
 com\microsv\ai_service\dto\response\ChatAIConversationResponse.class
 com\microsv\ai_service\repository\ConversationMemoryRepository.class
 com\microsv\ai_service\util\NullUtil.class
