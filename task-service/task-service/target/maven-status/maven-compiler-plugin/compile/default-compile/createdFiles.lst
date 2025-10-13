@@ -1,4 +1,5 @@
 com\microsv\task_service\dto\response\TaskStatisticResponse$TaskStatisticResponseBuilder.class
+com\microsv\task_service\mapper\TaskMapper.class
 com\microsv\task_service\repository\ScheduleEventRepository.class
 com\microsv\task_service\entity\Task$TaskBuilder.class
 com\microsv\task_service\dto\response\TaskResponse.class
@@ -7,12 +8,15 @@ com\microsv\task_service\dto\response\TaskStatisticResponse.class
 com\microsv\task_service\service\impl\NotificationServiceImpl.class
 com\microsv\task_service\controller\TaskController.class
 com\microsv\task_service\controller\NotificationController.class
+com\microsv\task_service\entity\PushSubscription$PushSubscriptionBuilder.class
 com\microsv\task_service\repository\PushSubscriptionRepository.class
 com\microsv\task_service\service\TaskService.class
+com\microsv\task_service\config\WebConfig.class
 com\microsv\task_service\service\impl\TaskServiceImpl.class
 com\microsv\task_service\enumeration\PriorityLevel.class
 com\microsv\task_service\repository\TaskRepository.class
 com\microsv\task_service\dto\response\TaskResponse$TaskResponseBuilder.class
+com\microsv\task_service\util\DateUtil.class
 com\microsv\task_service\service\NotificationService.class
 com\microsv\task_service\exception\GlobalException.class
 com\microsv\task_service\dto\request\SubscriptionRequest$SubscriptionRequestBuilder.class
@@ -28,3 +32,4 @@ com\microsv\task_service\config\SecurityConfig.class
 com\microsv\task_service\dto\request\TaskUpdateRequest$TaskUpdateRequestBuilder.class
 com\microsv\task_service\service\PushService.class
 com\microsv\task_service\entity\ScheduleEvent.class
+com\microsv\task_service\mapper\NotificationMapper.class
