@@ -104,4 +104,26 @@ public class TaskController {
         taskService.deleteTask(taskId, userId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/today")
+    public ResponseEntity<List<TaskResponse>> getAllTasksToday(@AuthenticationPrincipal Jwt jwt) {
+        Long userId = Long.parseLong(jwt.getSubject());
+        List<TaskResponse> responses = taskService.getAllTaskToday(userId);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/today/overdue")
+    public ResponseEntity<List<TaskResponse>> getOverdueTasksToday(@AuthenticationPrincipal Jwt jwt) {
+        Long userId = Long.parseLong(jwt.getSubject());
+        List<TaskResponse> responses = taskService.getOverdueTaskToday(userId);
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/today/completed")
+    public ResponseEntity<List<TaskResponse>> getCompletedTasksToday(@AuthenticationPrincipal Jwt jwt) {
+        Long userId = Long.parseLong(jwt.getSubject());
+        List<TaskResponse> responses = taskService.getCompetedTaskToday(userId);
+        return ResponseEntity.ok(responses);
+    }
+
 }

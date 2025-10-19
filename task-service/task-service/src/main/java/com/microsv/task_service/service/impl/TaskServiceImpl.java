@@ -161,6 +161,22 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<TaskResponse> getAllTaskToday(Long userId) {
+        return taskRepository.getAllTaskToday(userId).stream()
+                .map(taskMapper::tupleToTaskResponse).toList();
+    }
+
+    @Override
+    public List<TaskResponse> getOverdueTaskToday(Long userId) {
+        return taskRepository.getOverdueTasksToday(userId).stream()
+                .map(taskMapper::tupleToTaskResponse).toList();    }
+
+    @Override
+    public List<TaskResponse> getCompetedTaskToday(Long userId) {
+        return taskRepository.getCompletedTasksToday(userId).stream()
+                .map(taskMapper::tupleToTaskResponse).toList();    }
+
+    @Override
     public TaskStatisticResponse getTaskStatistics(Long userId) {
         Long totalTasks = taskRepository.countByUserIdAndStatus(userId, null);
         Long todoCount = taskRepository.countByUserIdAndStatus(userId, TaskStatus.TODO);

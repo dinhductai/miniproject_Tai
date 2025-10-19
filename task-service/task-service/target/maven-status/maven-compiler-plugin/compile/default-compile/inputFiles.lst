@@ -17,6 +17,7 @@ D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_servi
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\mapper\NotificationMapper.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\mapper\TaskMapper.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\repository\PushSubscriptionRepository.java
+D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\repository\query\TaskQuery.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\repository\ScheduleEventRepository.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\repository\TaskRepository.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\service\impl\NotificationServiceImpl.java
@@ -27,3 +28,4 @@ D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_servi
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\service\TaskService.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\TaskServiceApplication.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\util\DateUtil.java
+D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\util\EnumUtil.java

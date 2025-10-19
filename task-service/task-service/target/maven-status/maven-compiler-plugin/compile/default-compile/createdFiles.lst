@@ -26,10 +26,12 @@ com\microsv\task_service\TaskServiceApplication.class
 com\microsv\task_service\dto\request\SubscriptionRequest.class
 com\microsv\task_service\enumeration\TaskStatus.class
 com\microsv\task_service\service\impl\PushServiceImpl.class
+com\microsv\task_service\util\EnumUtil.class
 com\microsv\task_service\controller\internal\TaskInternalController.class
 com\microsv\task_service\dto\request\TaskCreationRequest.class
 com\microsv\task_service\config\SecurityConfig.class
 com\microsv\task_service\dto\request\TaskUpdateRequest$TaskUpdateRequestBuilder.class
 com\microsv\task_service\service\PushService.class
 com\microsv\task_service\entity\ScheduleEvent.class
+com\microsv\task_service\repository\query\TaskQuery.class
 com\microsv\task_service\mapper\NotificationMapper.class

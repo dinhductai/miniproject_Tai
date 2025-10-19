@@ -4,6 +4,7 @@ import com.microsv.task_service.dto.request.TaskCreationRequest;
 import com.microsv.task_service.dto.request.TaskUpdateRequest;
 import com.microsv.task_service.dto.response.TaskResponse;
 import com.microsv.task_service.dto.response.TaskStatisticResponse;
+import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.TaskStatus;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface TaskService {
     TaskStatisticResponse getTaskStatistics(Long userId);
     TaskResponse updateTaskStatus(Long taskId, TaskStatus status, Long userId);
     List<TaskResponse> getUpcomingTasks(Long userId, Integer hours);
+    List<TaskResponse> getAllTaskToday(Long userId);
+    List<TaskResponse> getOverdueTaskToday(Long userId);
+    List<TaskResponse> getCompetedTaskToday(Long userId);
 }

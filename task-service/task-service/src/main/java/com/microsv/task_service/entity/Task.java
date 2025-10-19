@@ -48,5 +48,5 @@ public class Task {
     private LocalDateTime completedAt;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId; // Chỉ lưu ID, không có quan hệ @ManyToOne
+    private Long userId;
 }
