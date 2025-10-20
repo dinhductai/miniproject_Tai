@@ -31,7 +31,10 @@ services:
     ports:
       - "9001:9001"
     environment:
-      JWT_SECRET: A9mK2pX8vS4rW7tF1yD3bJ6nL0zQ5hG2eR9cU4xT8sV1wM7oP3lY6jN5iC
+      - CLOUDINARY_CLOUD_NAME=dvgxke1mp
+      - CLOUDINARY_API_KEY=829169159285829
+      - CLOUDINARY_API_SECRET=4Yfv9YMes1yEYl-k8ODq3D4XkFI
+      - JWT_SECRET=A9mK2pX8vS4rW7tF1yD3bJ6nL0zQ5hG2eR9cU4xT8sV1wM7oP3lY6jN5iC
     depends_on:
       postgres-user-db:
         condition: service_healthy
