@@ -140,5 +140,15 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserAuthResponse(user,scopes);
     }
 
+    @Override
+    public long countUser() {
+        return userRepository.count();
+    }
+
+    @Override
+    public Long countUserRegisterThisWeek() {
+        return userRepository.countUsersRegisteredThisWeek();
+    }
+
 
 }

@@ -56,5 +56,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/counts")
+    public ResponseEntity<Long> countUser(){
+        return ResponseEntity.ok(userService.countUser());
+    }
 
+    @GetMapping("/counts-register")
+    public ResponseEntity<Long> countUserRegister(){
+        return ResponseEntity.ok(userService.countUserRegisterThisWeek());
+    }
 }

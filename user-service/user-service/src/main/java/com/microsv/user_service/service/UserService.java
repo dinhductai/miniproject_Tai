@@ -19,4 +19,6 @@ public interface UserService {
     UserResponse updateUser(Long userId, UserUpdateRequest request);
     void deleteUser(Long userId);
     UserAuthResponse getUserByEmail(String email);
+    long countUser();
+    Long countUserRegisterThisWeek();
 }
