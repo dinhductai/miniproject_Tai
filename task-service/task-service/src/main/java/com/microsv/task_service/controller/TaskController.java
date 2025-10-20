@@ -164,5 +164,17 @@ public class TaskController {
         return ResponseEntity.ok(timeline);
     }
 
+    @GetMapping("/active-users/weekly")
+    public ResponseEntity<Long> countUserRegister() {
+        Long count = taskService.countActiveUsersThisWeek();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/weekly")
+    public ResponseEntity<Long> countTaskWeekly() {
+        Long count = taskService.countTasksCreatedThisWeek();
+        return ResponseEntity.ok(count);
+    }
+
 
 }

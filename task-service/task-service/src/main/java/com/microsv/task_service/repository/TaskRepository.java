@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.microsv.task_service.repository.query.TaskQuery.COUNT_ACTIVE_USERS_THIS_WEEK;
+import static com.microsv.task_service.repository.query.TaskQuery.COUNT_TASKS_CREATED_THIS_WEEK;
+
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByDeadlineBetweenAndStatus(
             LocalDateTime startDeadline,
@@ -50,7 +53,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = TaskQuery.GET_TASK_CREATION_TIMELINE, nativeQuery = true)
     List<Tuple> getTaskCreationTimeline(@Param("userId") Long userId);
 
+    @Query(value = COUNT_ACTIVE_USERS_THIS_WEEK, nativeQuery = true)
+    Long countActiveUsersThisWeek();
 
+    @Query(value = COUNT_TASKS_CREATED_THIS_WEEK, nativeQuery = true)
+    Long countTasksCreatedThisWeek();
 
 
 

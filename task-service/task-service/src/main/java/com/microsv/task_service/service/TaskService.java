@@ -26,5 +26,8 @@ public interface TaskService {
     StatusTaskWeekResponse getWeeklyTaskRates(Long userId);
     List<DailyTaskCountResponse> getWeeklyTaskDistribution(Long userId);
     List<TaskTimelineResponse> getTaskCreationTimeline(Long userId);
+    Long countActiveUsersThisWeek();
+    Long countTasksCreatedThisWeek();
+
 
 }

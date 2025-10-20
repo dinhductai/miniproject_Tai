@@ -133,4 +133,12 @@ public class TaskQuery {
                     "FROM week_series ws\n" +
                     "LEFT JOIN task_weeks tw ON ws.week_start = tw.week_start\n" +
                     "ORDER BY ws.week_start;";
+
+    public static final String COUNT_ACTIVE_USERS_THIS_WEEK =
+            "SELECT COUNT(DISTINCT t.user_id) FROM tasks t " +
+                    "WHERE DATE_TRUNC('week', t.created_at) = DATE_TRUNC('week', CURRENT_DATE)";
+
+    public static final String COUNT_TASKS_CREATED_THIS_WEEK =
+            "SELECT COUNT(*) FROM tasks t " +
+                    "WHERE DATE_TRUNC('week', t.created_at) = DATE_TRUNC('week', CURRENT_DATE)";
 }

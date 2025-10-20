@@ -201,6 +201,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Long countActiveUsersThisWeek() {
+        return taskRepository.countActiveUsersThisWeek();
+    }
+
+    @Override
+    public Long countTasksCreatedThisWeek() {
+        return taskRepository.countTasksCreatedThisWeek();
+    }
+
+    @Override
     public TaskStatisticResponse getTaskStatistics(Long userId) {
         Long totalTasks = taskRepository.countByUserIdAndStatus(userId, null);
         Long todoCount = taskRepository.countByUserIdAndStatus(userId, TaskStatus.TODO);
