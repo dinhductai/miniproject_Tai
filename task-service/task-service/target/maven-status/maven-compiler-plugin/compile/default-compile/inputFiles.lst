@@ -6,8 +6,10 @@ D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_servi
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\request\SubscriptionRequest.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\request\TaskCreationRequest.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\request\TaskUpdateRequest.java
+D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\response\DailyCompletedTasksResponse.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\response\DailyTaskCountResponse.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\response\StatusTaskWeekResponse.java
+D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\response\TaskPriorityCountResponse.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\response\TaskResponse.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\response\TaskStatisticResponse.java
 D:\Smart_Schedule\task-service\task-service\src\main\java\com\microsv\task_service\dto\response\TaskTimelineResponse.java

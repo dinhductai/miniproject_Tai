@@ -28,6 +28,7 @@ public interface TaskService {
     List<TaskTimelineResponse> getTaskCreationTimeline(Long userId);
     Long countActiveUsersThisWeek();
     Long countTasksCreatedThisWeek();
-
+    List<DailyCompletedTasksResponse> getCompletedTasksByDayThisWeek();
+    List<TaskPriorityCountResponse> countTasksByPriority();
 
 }

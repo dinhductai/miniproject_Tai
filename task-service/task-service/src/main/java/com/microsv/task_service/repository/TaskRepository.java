@@ -1,5 +1,6 @@
 package com.microsv.task_service.repository;
 
+import com.microsv.task_service.dto.response.DailyCompletedTasksResponse;
 import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.TaskStatus;
 import com.microsv.task_service.repository.query.TaskQuery;
@@ -12,8 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.microsv.task_service.repository.query.TaskQuery.COUNT_ACTIVE_USERS_THIS_WEEK;
-import static com.microsv.task_service.repository.query.TaskQuery.COUNT_TASKS_CREATED_THIS_WEEK;
+import static com.microsv.task_service.repository.query.TaskQuery.*;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByDeadlineBetweenAndStatus(
@@ -59,6 +59,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = COUNT_TASKS_CREATED_THIS_WEEK, nativeQuery = true)
     Long countTasksCreatedThisWeek();
 
+    @Query(value = GET_COMPLETED_TASKS_BY_DAY_THIS_WEEK, nativeQuery = true)
+    List<Tuple> getCompletedTasksByDayThisWeek();
 
 
+    @Query(value = COUNT_TASKS_BY_PRIORITY, nativeQuery = true)
+    List<Tuple> countTasksByPriority();
 }

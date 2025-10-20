@@ -141,4 +141,36 @@ public class TaskQuery {
     public static final String COUNT_TASKS_CREATED_THIS_WEEK =
             "SELECT COUNT(*) FROM tasks t " +
                     "WHERE DATE_TRUNC('week', t.created_at) = DATE_TRUNC('week', CURRENT_DATE)";
+
+    public static final String GET_COMPLETED_TASKS_BY_DAY_THIS_WEEK =
+            "WITH days AS (\n" +
+                    "    SELECT generate_series(\n" +
+                    "        DATE_TRUNC('week', CURRENT_DATE),\n" +
+                    "        DATE_TRUNC('week', CURRENT_DATE) + INTERVAL '6 days',\n" +
+                    "        '1 day'::interval\n" +
+                    "    )::date AS day_date\n" +
+                    ")\n" +
+                    "SELECT \n" +
+                    "    TO_CHAR(d.day_date, 'Dy') AS day_name,\n" +
+                    "    COUNT(t.task_id) AS completed_count\n" +
+                    "FROM days d\n" +
+                    "LEFT JOIN tasks t \n" +
+                    "    ON DATE(t.completed_at) = d.day_date\n" +
+                    "    AND t.status = 'DONE'\n" +
+                    "    AND DATE_TRUNC('week', t.completed_at) = DATE_TRUNC('week', CURRENT_DATE)\n" +
+                    "GROUP BY d.day_date\n" +
+                    "ORDER BY d.day_date;";
+
+    public static final String COUNT_TASKS_BY_PRIORITY =
+            "SELECT \n" +
+                    "    t.priority AS priority_level,\n" +
+                    "    COUNT(*) AS task_count\n" +
+                    "FROM tasks t\n" +
+                    "GROUP BY t.priority\n" +
+                    "ORDER BY \n" +
+                    "    CASE t.priority\n" +
+                    "        WHEN 'HIGH' THEN 1\n" +
+                    "        WHEN 'MEDIUM' THEN 2\n" +
+                    "        WHEN 'LOW' THEN 3\n" +
+                    "    END;";
 }

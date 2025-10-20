@@ -19,6 +19,8 @@ com\microsv\task_service\enumeration\PriorityLevel.class
 com\microsv\task_service\repository\TaskRepository.class
 com\microsv\task_service\dto\response\TaskResponse$TaskResponseBuilder.class
 com\microsv\task_service\dto\response\StatusTaskWeekResponse$StatusTaskWeekResponseBuilder.class
+com\microsv\task_service\dto\response\DailyCompletedTasksResponse$DailyCompletedTasksResponseBuilder.class
+com\microsv\task_service\dto\response\DailyCompletedTasksResponse.class
 com\microsv\task_service\util\DateUtil.class
 com\microsv\task_service\dto\response\StatusTaskWeekResponse.class
 com\microsv\task_service\service\NotificationService.class
@@ -34,8 +36,10 @@ com\microsv\task_service\enumeration\TaskStatus.class
 com\microsv\task_service\service\impl\PushServiceImpl.class
 com\microsv\task_service\util\EnumUtil.class
 com\microsv\task_service\controller\internal\TaskInternalController.class
+com\microsv\task_service\dto\response\TaskPriorityCountResponse$TaskPriorityCountResponseBuilder.class
 com\microsv\task_service\dto\request\TaskCreationRequest.class
 com\microsv\task_service\config\SecurityConfig.class
+com\microsv\task_service\dto\response\TaskPriorityCountResponse.class
 com\microsv\task_service\dto\request\TaskUpdateRequest$TaskUpdateRequestBuilder.class
 com\microsv\task_service\service\PushService.class
 com\microsv\task_service\entity\ScheduleEvent.class

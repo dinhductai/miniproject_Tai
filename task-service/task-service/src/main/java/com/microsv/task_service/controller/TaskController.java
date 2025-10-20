@@ -176,5 +176,15 @@ public class TaskController {
         return ResponseEntity.ok(count);
     }
 
+    @GetMapping("/statistics/weekly-task-complete")
+    public ResponseEntity<List<DailyCompletedTasksResponse>> getDailyCompletedTask() {
+        List<DailyCompletedTasksResponse> responses = taskService.getCompletedTasksByDayThisWeek();
+        return ResponseEntity.ok(responses);
+    }
 
+    @GetMapping("/statistics/weekly-task-priority")
+    public ResponseEntity<List<TaskPriorityCountResponse>> getPriorityTaskCount(){
+        List<TaskPriorityCountResponse> responses = taskService.countTasksByPriority();
+        return ResponseEntity.ok(responses);
+    }
 }
