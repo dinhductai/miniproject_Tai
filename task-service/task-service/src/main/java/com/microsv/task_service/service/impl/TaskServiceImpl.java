@@ -4,8 +4,7 @@ import com.microsv.common.enumeration.ErrorCode;
 import com.microsv.common.exception.BaseException;
 import com.microsv.task_service.dto.request.TaskCreationRequest;
 import com.microsv.task_service.dto.request.TaskUpdateRequest;
-import com.microsv.task_service.dto.response.TaskResponse;
-import com.microsv.task_service.dto.response.TaskStatisticResponse;
+import com.microsv.task_service.dto.response.*;
 import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.PriorityLevel;
 import com.microsv.task_service.enumeration.TaskStatus;
@@ -175,6 +174,31 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponse> getCompetedTaskToday(Long userId) {
         return taskRepository.getCompletedTasksToday(userId).stream()
                 .map(taskMapper::tupleToTaskResponse).toList();    }
+
+    @Override
+    public Double getCompletionRateThisWeek(Long userId) {
+        return taskRepository.getCompletionRateThisWeekByUser(userId);
+    }
+
+    @Override
+    public Double getFreeHoursThisWeek(Long userId) {
+        return taskRepository.getFreeHoursThisWeek(userId);
+    }
+
+    @Override
+    public StatusTaskWeekResponse getWeeklyTaskRates(Long userId) {
+        return taskMapper.tupleToStatusTaskWeekResponse(taskRepository.getWeeklyTaskRates(userId));
+    }
+
+    @Override
+    public List<DailyTaskCountResponse> getWeeklyTaskDistribution(Long userId) {
+        return taskRepository.getWeeklyTaskDistribution(userId).stream().map(taskMapper::tupleToDailyTaskCountResponse).toList();
+    }
+
+    @Override
+    public List<TaskTimelineResponse> getTaskCreationTimeline(Long userId) {
+        return taskRepository.getTaskCreationTimeline(userId).stream().map(taskMapper::tupleToTaskTimelineResponse).toList();
+    }
 
     @Override
     public TaskStatisticResponse getTaskStatistics(Long userId) {

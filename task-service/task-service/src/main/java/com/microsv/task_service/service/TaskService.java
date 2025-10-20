@@ -2,8 +2,7 @@ package com.microsv.task_service.service;
 
 import com.microsv.task_service.dto.request.TaskCreationRequest;
 import com.microsv.task_service.dto.request.TaskUpdateRequest;
-import com.microsv.task_service.dto.response.TaskResponse;
-import com.microsv.task_service.dto.response.TaskStatisticResponse;
+import com.microsv.task_service.dto.response.*;
 import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.TaskStatus;
 
@@ -22,4 +21,10 @@ public interface TaskService {
     List<TaskResponse> getAllTaskToday(Long userId);
     List<TaskResponse> getOverdueTaskToday(Long userId);
     List<TaskResponse> getCompetedTaskToday(Long userId);
+    Double getCompletionRateThisWeek(Long userId);
+    Double getFreeHoursThisWeek(Long userId);
+    StatusTaskWeekResponse getWeeklyTaskRates(Long userId);
+    List<DailyTaskCountResponse> getWeeklyTaskDistribution(Long userId);
+    List<TaskTimelineResponse> getTaskCreationTimeline(Long userId);
+
 }

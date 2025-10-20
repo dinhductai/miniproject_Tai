@@ -1,8 +1,10 @@
 com\microsv\task_service\dto\response\TaskStatisticResponse$TaskStatisticResponseBuilder.class
+com\microsv\task_service\dto\response\TaskTimelineResponse.class
 com\microsv\task_service\mapper\TaskMapper.class
 com\microsv\task_service\repository\ScheduleEventRepository.class
 com\microsv\task_service\entity\Task$TaskBuilder.class
 com\microsv\task_service\dto\response\TaskResponse.class
+com\microsv\task_service\dto\response\DailyTaskCountResponse$DailyTaskCountResponseBuilder.class
 com\microsv\task_service\entity\PushSubscription.class
 com\microsv\task_service\dto\response\TaskStatisticResponse.class
 com\microsv\task_service\service\impl\NotificationServiceImpl.class
@@ -16,9 +18,13 @@ com\microsv\task_service\service\impl\TaskServiceImpl.class
 com\microsv\task_service\enumeration\PriorityLevel.class
 com\microsv\task_service\repository\TaskRepository.class
 com\microsv\task_service\dto\response\TaskResponse$TaskResponseBuilder.class
+com\microsv\task_service\dto\response\StatusTaskWeekResponse$StatusTaskWeekResponseBuilder.class
 com\microsv\task_service\util\DateUtil.class
+com\microsv\task_service\dto\response\StatusTaskWeekResponse.class
 com\microsv\task_service\service\NotificationService.class
+com\microsv\task_service\dto\response\TaskTimelineResponse$TaskTimelineResponseBuilder.class
 com\microsv\task_service\exception\GlobalException.class
+com\microsv\task_service\dto\response\DailyTaskCountResponse.class
 com\microsv\task_service\dto\request\SubscriptionRequest$SubscriptionRequestBuilder.class
 com\microsv\task_service\dto\request\TaskUpdateRequest.class
 com\microsv\task_service\entity\Task.class

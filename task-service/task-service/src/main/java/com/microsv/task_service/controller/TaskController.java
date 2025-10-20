@@ -2,8 +2,7 @@ package com.microsv.task_service.controller;
 
 import com.microsv.task_service.dto.request.TaskCreationRequest;
 import com.microsv.task_service.dto.request.TaskUpdateRequest;
-import com.microsv.task_service.dto.response.TaskResponse;
-import com.microsv.task_service.dto.response.TaskStatisticResponse;
+import com.microsv.task_service.dto.response.*;
 import com.microsv.task_service.enumeration.TaskStatus;
 import com.microsv.task_service.service.TaskService;
 import jakarta.validation.Valid;
@@ -125,5 +124,45 @@ public class TaskController {
         List<TaskResponse> responses = taskService.getCompetedTaskToday(userId);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/statistics/weekly-status")
+    public ResponseEntity<StatusTaskWeekResponse> getWeeklyTaskStatusRates(@AuthenticationPrincipal Jwt jwt) {
+        Long userId = Long.parseLong(jwt.getSubject());
+        StatusTaskWeekResponse response = taskService.getWeeklyTaskRates(userId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/statistics/weekly-distribution")
+    public ResponseEntity<List<DailyTaskCountResponse>> getWeeklyTaskDistribution(@AuthenticationPrincipal Jwt jwt) {
+        Long userId = Long.parseLong(jwt.getSubject());
+        List<DailyTaskCountResponse> responses = taskService.getWeeklyTaskDistribution(userId);
+        return ResponseEntity.ok(responses);
+    }
+
+    //done
+    @GetMapping("/statistics/completion-before-deadline")
+    public ResponseEntity<Double> getCompletedBeforeDeadlineRate(@AuthenticationPrincipal Jwt jwt) {
+        Long userId = Long.parseLong(jwt.getSubject());
+        Double rate = taskService.getCompletionRateThisWeek(userId);
+        return ResponseEntity.ok(rate);
+    }
+
+    //done
+    @GetMapping("/statistics/free-hours")
+    public ResponseEntity<Double> getFreeHoursThisWeek(@AuthenticationPrincipal Jwt jwt) {
+        Long userId = Long.parseLong(jwt.getSubject());
+        Double freeHours = taskService.getFreeHoursThisWeek(userId);
+        return ResponseEntity.ok(freeHours);
+    }
+
+
+    //done
+    @GetMapping("/statistics/creation-timeline")
+    public ResponseEntity<List<TaskTimelineResponse>> getTaskCreationTimeline(@AuthenticationPrincipal Jwt jwt) {
+        Long userId = Long.parseLong(jwt.getSubject());
+        List<TaskTimelineResponse> timeline = taskService.getTaskCreationTimeline(userId);
+        return ResponseEntity.ok(timeline);
+    }
+
 
 }

@@ -35,4 +35,23 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = TaskQuery.GET_COMPLETED_TASK_TODAY,nativeQuery = true)
     List<Tuple> getCompletedTasksToday(@Param("userId") Long userId);
 
+    @Query(value = TaskQuery.GET_COMPLETION_RATE_THIS_WEEK,nativeQuery = true)
+    Double getCompletionRateThisWeekByUser(@Param("userId") Long userId);
+
+    @Query(value = TaskQuery.GET_FREE_HOURS_THIS_WEEK,nativeQuery = true)
+    Double getFreeHoursThisWeek(@Param("userId") Long userId);
+
+    @Query(value = TaskQuery.GET_WEEKLY_TASK_STATUS_RATE,nativeQuery = true)
+    Tuple getWeeklyTaskRates(@Param("userId") Long userId);
+
+    @Query(value = TaskQuery.GET_WEEKLY_TASK_DISTRIBUTION, nativeQuery = true)
+    List<Tuple> getWeeklyTaskDistribution(@Param("userId") Long userId);
+
+    @Query(value = TaskQuery.GET_TASK_CREATION_TIMELINE, nativeQuery = true)
+    List<Tuple> getTaskCreationTimeline(@Param("userId") Long userId);
+
+
+
+
+
 }

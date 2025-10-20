@@ -1,7 +1,10 @@
 package com.microsv.task_service.mapper;
 
 import com.microsv.task_service.dto.request.TaskCreationRequest;
+import com.microsv.task_service.dto.response.DailyTaskCountResponse;
+import com.microsv.task_service.dto.response.StatusTaskWeekResponse;
 import com.microsv.task_service.dto.response.TaskResponse;
+import com.microsv.task_service.dto.response.TaskTimelineResponse;
 import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.PriorityLevel;
 import com.microsv.task_service.enumeration.TaskStatus;
@@ -50,6 +53,27 @@ public class TaskMapper {
                 .build();
     }
 
+    public StatusTaskWeekResponse tupleToStatusTaskWeekResponse(Tuple tuple){
+        return StatusTaskWeekResponse.builder()
+                .completedRate(tuple.get("completedRate", Double.class))
+                .inProgressRate(tuple.get("inProgressRate", Double.class))
+                .todoRate(tuple.get("todoRate", Double.class))
+                .build();
+    }
+
+    public DailyTaskCountResponse tupleToDailyTaskCountResponse(Tuple tuple){
+        return DailyTaskCountResponse.builder()
+                .dayName(tuple.get("day_name", String.class))
+                .taskCount(tuple.get("task_count", Long.class))
+                .build();
+    }
+
+    public TaskTimelineResponse tupleToTaskTimelineResponse(Tuple tuple){
+        return TaskTimelineResponse.builder()
+                .weekLabel(tuple.get("week_label", String.class))
+                .taskCount(tuple.get("task_count", Long.class))
+                .build();
+    }
 
 
 }
