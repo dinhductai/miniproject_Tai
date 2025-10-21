@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,8 @@ import static com.microsv.task_service.repository.query.TaskQuery.*;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByDeadlineBetweenAndStatus(
-            LocalDateTime startDeadline,
-            LocalDateTime endDeadline,
+            OffsetDateTime startDeadline,
+            OffsetDateTime endDeadline,
             TaskStatus status
     );
     Optional<Task>  findByTaskIdAndUserId(Long taskId, long userId);

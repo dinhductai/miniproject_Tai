@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.security.GeneralSecurityException;
 import java.security.Security;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,8 +67,8 @@ public class NotificationServiceImpl implements NotificationService {
     @Scheduled(fixedRate = 30000) //set thời gian quét deadline , đang là 30s
     public void checkDeadlinesAndSendNotifications() {
         log.info("scanning for upcoming deadlines");
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime inOneHour = now.plusHours(1);
+        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime inOneHour = now.plusHours(1);
 
         List<Task> upcomingTasks = taskRepository.findAllByDeadlineBetweenAndStatus(now, inOneHour, TaskStatus.TODO);
 
@@ -92,19 +93,34 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
-    //gửi thông báo trình duyệt
+    @Override
+    public void unsubscribe( Long userId) {
+        subscriptionRepository.deleteByUserId(userId);
+    }
+
+    @Override
     public void sendNotification(PushSubscription subscription, String payload) {
         try {
+            // Chuyển payload sang JSON format
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put("title", "📋 Task Deadline Reminder");
+            jsonPayload.put("body", payload);
+            jsonPayload.put("icon", "/icon-192x192.png");
+            jsonPayload.put("badge", "/icon-192x192.png");
+            jsonPayload.put("tag", "task-notification");
+
             Notification notification = new Notification(
                     subscription.getEndpoint(),
                     subscription.getP256dh(),
                     subscription.getAuth(),
-                    payload
+                    jsonPayload.toString()  // ← Convert to JSON string
             );
 
             pushService.send(notification);
+            log.info("Push notification sent successfully");
 
         } catch (Exception e) {
+            log.error("Error sending push notification", e);
             throw new BaseException(ErrorCode.DATABASE_QUERY_ERROR);
         }
     }

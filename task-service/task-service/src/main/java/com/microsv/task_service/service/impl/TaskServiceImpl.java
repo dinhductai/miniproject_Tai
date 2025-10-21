@@ -22,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,7 +97,7 @@ public class TaskServiceImpl implements TaskService {
         if (request.getStatus() != null) {
             task.setStatus(request.getStatus());
             if (request.getStatus() == TaskStatus.DONE) {
-                task.setCompletedAt(LocalDateTime.now());
+                task.setCompletedAt(OffsetDateTime.now());
             }
         }
         Task updatedTask = taskRepository.save(task);
@@ -114,7 +115,7 @@ public class TaskServiceImpl implements TaskService {
 
         task.setStatus(status);
         if (status == TaskStatus.DONE) {
-            task.setCompletedAt(LocalDateTime.now());
+            task.setCompletedAt(OffsetDateTime.now());
         }
 
         Task updatedTask = taskRepository.save(task);
@@ -140,8 +141,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> getUpcomingTasks(Long userId, Integer hours) {
         try {
-            LocalDateTime now = LocalDateTime.now();
-            LocalDateTime deadlineLimit = now.plusHours(hours != null ? hours : 24);
+            OffsetDateTime now = OffsetDateTime.now();
+            OffsetDateTime deadlineLimit = now.plusHours(hours != null ? hours : 24);
 
             List<Task> tasks = taskRepository.findAllByUserIdAndStatus(userId, TaskStatus.TODO)
                     .stream()

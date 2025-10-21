@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Builder
 @Getter
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class TaskUpdateRequest {
     private String title;
     private String description;
-    private LocalDateTime deadline;
+    private OffsetDateTime deadline;
     private PriorityLevel priority;
     private TaskStatus status;
 }

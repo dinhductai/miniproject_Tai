@@ -7,11 +7,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.chrono.ChronoLocalDate;
 
 public class DateUtil {
-    public static void ValidateDeadline(LocalDateTime deadline) {
-        if (deadline != null && deadline.isBefore(LocalDateTime.now())) {
+    public static void ValidateDeadline(OffsetDateTime deadline) {
+        if (deadline != null && deadline.isBefore(OffsetDateTime.now())) {
             throw new BaseException(ErrorCode.BAD_REQUEST);
         }
     }

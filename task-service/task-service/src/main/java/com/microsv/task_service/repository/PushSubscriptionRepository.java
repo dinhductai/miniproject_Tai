@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface PushSubscriptionRepository extends JpaRepository<PushSubscription, Long> {
     List<PushSubscription> findAllByUserId(Long userId);
     Optional<PushSubscription> findByEndpointAndUserId(String endpoint, Long userId);
+    void deleteByUserId(Long userId);
 }

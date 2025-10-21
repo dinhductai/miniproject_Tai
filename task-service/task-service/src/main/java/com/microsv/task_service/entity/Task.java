@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Entity
@@ -30,7 +31,7 @@ public class Task {
     private String description;
 
     @Column(nullable = false)
-    private LocalDateTime deadline;
+    private OffsetDateTime deadline;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -42,10 +43,10 @@ public class Task {
 
 //    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @Column(name = "completed_at")
-    private LocalDateTime completedAt;
+    private OffsetDateTime completedAt;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;

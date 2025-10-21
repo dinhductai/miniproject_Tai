@@ -42,11 +42,11 @@ public class TaskMapper {
                 .taskId(tuple.get("taskId", Long.class))
                 .title(tuple.get("title", String.class))
                 .description(tuple.get("description", String.class))
-                .deadline(tuple.get("deadline", java.time.LocalDateTime.class))
+                .deadline(tuple.get("deadline", java.time.OffsetDateTime.class))
                 .status(EnumUtil.convertStatus(tuple.get("status")))
                 .priority(EnumUtil.convertPriority(tuple.get("priority")))
-                .createdAt(tuple.get("createdAt", java.time.LocalDateTime.class))
-                .completedAt(tuple.get("completedAt", java.time.LocalDateTime.class))
+                .createdAt(tuple.get("createdAt", java.time.OffsetDateTime.class))
+                .completedAt(tuple.get("completedAt", java.time.OffsetDateTime.class))
                 .userId(tuple.get("userId", Long.class))
                 .build();
     }

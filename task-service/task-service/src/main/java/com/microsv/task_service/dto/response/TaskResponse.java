@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -17,10 +18,10 @@ public class TaskResponse {
     private Long taskId;
     private String title;
     private String description;
-    private LocalDateTime deadline;
+    private OffsetDateTime deadline;
     private TaskStatus status;
     private PriorityLevel priority;
-    private LocalDateTime createdAt;
-    private LocalDateTime completedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime completedAt;
     private Long userId;
 }

@@ -4,6 +4,8 @@ import com.microsv.task_service.enumeration.PriorityLevel;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
 import lombok.Data;
 
 @Data
@@ -13,9 +15,9 @@ public class TaskCreationRequest {
     private String description;
 //    @Future(message = "Deadline must be in the future")
 
-    private LocalDateTime startTime;
+    private OffsetDateTime startTime;
 //    @NotBlank(message = "Deadline is required")
-    private LocalDateTime deadline;
+    private OffsetDateTime deadline;
 //    @NotBlank(message = "Priority is required")
     private PriorityLevel priority;
 }

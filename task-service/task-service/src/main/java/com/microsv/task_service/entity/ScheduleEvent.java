@@ -3,6 +3,7 @@ package com.microsv.task_service.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Entity
@@ -18,10 +19,10 @@ public class ScheduleEvent {
     private String title;
 
     @Column(name = "start_time", nullable = false)
-    private LocalDateTime startTime;
+    private OffsetDateTime startTime;
 
     @Column(name = "end_time", nullable = false)
-    private LocalDateTime endTime;
+    private OffsetDateTime endTime;
 
     @Column(name = "user_id", nullable = false)
     private Long userId; // Chỉ lưu ID

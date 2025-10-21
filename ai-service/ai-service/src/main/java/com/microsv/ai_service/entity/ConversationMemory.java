@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "conversation_memory")
 @Getter
+
+
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
