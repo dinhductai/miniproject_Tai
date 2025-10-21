@@ -2,19 +2,18 @@ package com.microsv.ai_service.controller;
 
 import com.microsv.ai_service.dto.response.ChatAIConversationResponse;
 import com.microsv.ai_service.dto.response.ChatAIResponse;
+import com.microsv.ai_service.entity.ConversationMemory;
 import com.microsv.ai_service.service.impl.ChatAIServiceImpl;
 import com.microsv.ai_service.service.impl.ChatMemoryServiceImpl;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -44,4 +43,18 @@ public class ConversationController {
         return ResponseEntity.ok(response);
     }
 
-}
+    @GetMapping("/id")
+    public ResponseEntity<String> getConversationId(@AuthenticationPrincipal Jwt jwt){
+        Long userId  = Long.parseLong(jwt.getSubject());
+        String conversationId = chatMemoryService.getConversationId(userId);
+        return ResponseEntity.ok(conversationId);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ConversationMemory>> getConversationMemory(@AuthenticationPrincipal Jwt jwt,
+                                                                          @RequestParam(defaultValue = "0") int page,
+                                                                          @RequestParam(defaultValue = "10") int size){
+        Long userId  = Long.parseLong(jwt.getSubject());
+        Page<ConversationMemory> conversation = chatMemoryService.getConversationMemory(userId,page,size);
+        return ResponseEntity.ok(conversation);
+    }}

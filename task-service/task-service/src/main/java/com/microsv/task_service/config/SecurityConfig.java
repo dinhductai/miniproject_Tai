@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/internal/**").permitAll()
@@ -58,43 +58,43 @@ public class SecurityConfig {
     }
 
     // CẤU HÌNH CORS MẠNH MẼ HƠN
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        // Cho phép tất cả origins trong development
-        configuration.setAllowedOriginPatterns(List.of("*"));
-
-        // Cho phép tất cả methods
-        configuration.setAllowedMethods(Arrays.asList(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
-        ));
-
-        // Cho phép tất cả headers
-        configuration.setAllowedHeaders(Arrays.asList(
-                "Authorization", "Content-Type", "X-Requested-With", "Accept",
-                "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers",
-                "Cache-Control", "User-Agent"
-        ));
-
-        // Cho phép expose headers
-        configuration.setExposedHeaders(Arrays.asList(
-                "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"
-        ));
-
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L); // Cache preflight request 1 giờ
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//
+//        // Cho phép tất cả origins trong development
+//        configuration.setAllowedOriginPatterns(List.of("*"));
+//
+//        // Cho phép tất cả methods
+//        configuration.setAllowedMethods(Arrays.asList(
+//                "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
+//        ));
+//
+//        // Cho phép tất cả headers
+//        configuration.setAllowedHeaders(Arrays.asList(
+//                "Authorization", "Content-Type", "X-Requested-With", "Accept",
+//                "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers",
+//                "Cache-Control", "User-Agent"
+//        ));
+//
+//        // Cho phép expose headers
+//        configuration.setExposedHeaders(Arrays.asList(
+//                "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"
+//        ));
+//
+//        configuration.setAllowCredentials(true);
+//        configuration.setMaxAge(3600L); // Cache preflight request 1 giờ
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     // THÊM CORS FILTER ĐỂ ĐẢM BẢO HOẠT ĐỘNG
-    @Bean
-    public CorsFilter corsFilter() {
-        return new CorsFilter(corsConfigurationSource());
-    }
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        return new CorsFilter(corsConfigurationSource());
+//    }
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {

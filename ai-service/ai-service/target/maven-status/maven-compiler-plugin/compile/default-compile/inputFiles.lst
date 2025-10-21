@@ -13,6 +13,7 @@ D:\Smart_Schedule\ai-service\ai-service\src\main\java\com\microsv\ai_service\enu
 D:\Smart_Schedule\ai-service\ai-service\src\main\java\com\microsv\ai_service\exception\GlobalExceptionHandler.java
 D:\Smart_Schedule\ai-service\ai-service\src\main\java\com\microsv\ai_service\repository\ConversationMemoryRepository.java
 D:\Smart_Schedule\ai-service\ai-service\src\main\java\com\microsv\ai_service\service\ChatAIService.java
+D:\Smart_Schedule\ai-service\ai-service\src\main\java\com\microsv\ai_service\service\ConversationMemoryService.java
 D:\Smart_Schedule\ai-service\ai-service\src\main\java\com\microsv\ai_service\service\impl\ChatAIServiceImpl.java
 D:\Smart_Schedule\ai-service\ai-service\src\main\java\com\microsv\ai_service\service\impl\ChatMemoryServiceImpl.java
 D:\Smart_Schedule\ai-service\ai-service\src\main\java\com\microsv\ai_service\util\NullUtil.java

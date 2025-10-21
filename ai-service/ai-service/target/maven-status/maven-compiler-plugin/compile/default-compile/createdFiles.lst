@@ -4,6 +4,7 @@ com\microsv\ai_service\client\TaskClient.class
 com\microsv\ai_service\exception\GlobalExceptionHandler.class
 com\microsv\ai_service\service\ChatAIService.class
 com\microsv\ai_service\service\impl\ChatAIServiceImpl.class
+com\microsv\ai_service\service\ConversationMemoryService.class
 com\microsv\ai_service\entity\ConversationMemory$ConversationMemoryBuilder.class
 com\microsv\ai_service\util\PromptUtil.class
 com\microsv\ai_service\config\SecurityConfig.class

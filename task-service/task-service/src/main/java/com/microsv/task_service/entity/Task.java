@@ -40,7 +40,7 @@ public class Task {
     @Column(nullable = false)
     private PriorityLevel priority;
 
-    @CreationTimestamp
+//    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

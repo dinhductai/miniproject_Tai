@@ -176,7 +176,7 @@ services:
       - "9006:9006"
     environment:
       JWT_SECRET: A9mK2pX8vS4rW7tF1yD3bJ6nL0zQ5hG2eR9cU4xT8sV1wM7oP3lY6jN5iC
-      SPRING_AI_OPENAI_API_KEY: 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
+      SPRING_AI_OPENAI_API_KEY: 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
     depends_on:
       postgres-ai-db:
         condition: service_healthy

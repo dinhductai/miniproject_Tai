@@ -8,10 +8,14 @@ import lombok.Data;
 
 @Data
 public class TaskCreationRequest {
-    @NotBlank(message = "Title is required")
+//    @NotBlank(message = "Title is required")
     private String title;
     private String description;
-    @Future(message = "Deadline must be in the future")
+//    @Future(message = "Deadline must be in the future")
+
+    private LocalDateTime startTime;
+//    @NotBlank(message = "Deadline is required")
     private LocalDateTime deadline;
+//    @NotBlank(message = "Priority is required")
     private PriorityLevel priority;
 }

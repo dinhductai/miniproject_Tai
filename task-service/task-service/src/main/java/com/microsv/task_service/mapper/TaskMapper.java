@@ -16,6 +16,7 @@ public class TaskMapper {
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .deadline(request.getDeadline())
+                .createdAt(request.getStartTime())
                 .priority(request.getPriority() != null ? request.getPriority() : PriorityLevel.MEDIUM)
                 .status(TaskStatus.TODO)
                 .userId(userId)

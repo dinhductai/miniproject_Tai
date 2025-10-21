@@ -47,4 +47,6 @@ public class ChatAIServiceImpl implements ChatAIService {
                 .content().trim();
 
     }
+
+
 }

@@ -36,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponse createTask(TaskCreationRequest request, Long userId) {
         try {
-            DateUtil.ValidateDeadline(request.getDeadline());
+//            DateUtil.ValidateDeadline(request.getDeadline());
             Task savedTask = taskRepository.save(taskMapper.taskCreationRequestToTask(request, userId));
             return taskMapper.toTaskResponse(savedTask);
         }catch (Exception e){

@@ -4,6 +4,7 @@ import com.microsv.ai_service.client.TaskClient;
 import com.microsv.ai_service.dto.response.TaskResponse;
 import com.microsv.ai_service.entity.ConversationMemory;
 import com.microsv.ai_service.repository.ConversationMemoryRepository;
+import com.microsv.ai_service.service.ConversationMemoryService;
 import com.microsv.ai_service.util.NullUtil;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,9 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -25,7 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ChatMemoryServiceImpl implements ChatMemory {
+public class ChatMemoryServiceImpl implements ChatMemory , ConversationMemoryService {
     private final ConversationMemoryRepository conversationMemoryRepository;
     private final TaskClient taskClient;
 
@@ -109,5 +113,17 @@ public class ChatMemoryServiceImpl implements ChatMemory {
         else {
             return new AssistantMessage(memory.getContent());
         }
+    }
+
+    @Override
+    public String getConversationId(Long userId) {
+        ConversationMemory conversationMemory = conversationMemoryRepository.findFirstByUserId(userId).orElseThrow();
+        return conversationMemory.getConversationId();
+    }
+
+    @Override
+    public Page<ConversationMemory> getConversationMemory(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page,size);
+        return conversationMemoryRepository.findAllByUserId(userId,pageable);
     }
 }
