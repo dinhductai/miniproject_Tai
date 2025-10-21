@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/internal/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // QUAN TRỌNG: Cho phép preflight requests
                         .requestMatchers(HttpMethod.GET, "/api/tasks").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/tasks").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/tasks/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/tasks").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/tasks/**").authenticated()
@@ -89,8 +90,8 @@ public class SecurityConfig {
 //        source.registerCorsConfiguration("/**", configuration);
 //        return source;
 //    }
-
-    // THÊM CORS FILTER ĐỂ ĐẢM BẢO HOẠT ĐỘNG
+//
+//    // THÊM CORS FILTER ĐỂ ĐẢM BẢO HOẠT ĐỘNG
 //    @Bean
 //    public CorsFilter corsFilter() {
 //        return new CorsFilter(corsConfigurationSource());

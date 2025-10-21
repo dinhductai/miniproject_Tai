@@ -27,10 +27,18 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
+    public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserCreationRequest request) {
+        UserResponse response = userService.createUser(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+
+    @PostMapping("/create")
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreationRequest request) {
         UserResponse response = userService.createUser(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
 
     //tìm theo id
 //    @GetMapping("/{userId}")
