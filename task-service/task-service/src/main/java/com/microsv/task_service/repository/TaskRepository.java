@@ -30,7 +30,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Long countByUserIdAndStatus(Long userId, TaskStatus status);
 
-    @Query(value = TaskQuery.GET_ALL_TASK_TODAY,nativeQuery = true)
+    @Query(value = TaskQuery.GET_TASKS_IN_TODAY,nativeQuery = true)
     List<Tuple> getAllTaskToday(@Param("userId") Long userId);
 
     @Query(value = TaskQuery.GET_OVERDUE_TASK_TODAY, nativeQuery = true)
@@ -66,4 +66,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query(value = COUNT_TASKS_BY_PRIORITY, nativeQuery = true)
     List<Tuple> countTasksByPriority();
+
+    List<Task> findByTitle(String title);
 }

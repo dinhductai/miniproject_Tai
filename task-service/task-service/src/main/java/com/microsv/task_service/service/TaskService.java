@@ -30,5 +30,5 @@ public interface TaskService {
     Long countTasksCreatedThisWeek();
     List<DailyCompletedTasksResponse> getCompletedTasksByDayThisWeek();
     List<TaskPriorityCountResponse> countTasksByPriority();
-
+    List<Task> findTaskByTitle(String title);
 }

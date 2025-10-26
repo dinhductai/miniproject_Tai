@@ -1,14 +1,18 @@
 package com.microsv.task_service.repository.query;
 
 public class TaskQuery {
-    public static final String GET_ALL_TASK_TODAY =
+    public static final String GET_TASKS_IN_TODAY =
             "SELECT t.task_id AS taskId, t.title AS title, t.description AS description, " +
-                    " t.deadline AS deadline, t.status AS status, t.priority AS priority, " +
-                    " t.created_at AS createdAt, t.completed_at AS completedAt, t.user_id AS userId " +
+                    "t.deadline AS deadline, t.status AS status, t.priority AS priority, " +
+                    "t.created_at AS createdAt, t.completed_at AS completedAt, t.user_id AS userId " +
                     "FROM tasks t " +
-                    "WHERE t.user_id = :userId AND t.deadline >= date_trunc('day', now()) " +
-                    "AND t.deadline < date_trunc('day', now() + interval '1 day') " +
-                    "ORDER BY t.deadline ASC ";
+                    "WHERE t.user_id = :userId " +
+                    "AND ( " +
+                    "    (t.created_at <= date_trunc('day', now() + interval '1 day') AND t.deadline >= date_trunc('day', now())) " +
+                    "    OR (t.completed_at IS NOT NULL AND t.completed_at >= date_trunc('day', now()) AND t.completed_at < date_trunc('day', now() + interval '1 day')) " +
+                    ") " +
+                    "ORDER BY t.deadline ASC";
+
 
     public static final String GET_OVERDUE_TASK_TODAY =
             "SELECT t.task_id AS taskId, t.title AS title, t.description AS description, " +
@@ -28,10 +32,11 @@ public class TaskQuery {
                     "t.created_at AS createdAt, t.completed_at AS completedAt, t.user_id AS userId " +
                     "FROM tasks t " +
                     "WHERE t.user_id = :userId " +
-                    "AND t.deadline >= date_trunc('day', now()) " +
-                    "AND t.deadline < date_trunc('day', now() + interval '1 day') " +
+                    "AND t.completed_at >= date_trunc('day', now()) " +
+                    "AND t.completed_at < date_trunc('day', now() + interval '1 day') " +
                     "AND t.status = 'COMPLETED' " +
-                    "ORDER BY t.deadline ASC";
+                    "ORDER BY t.completed_at ASC";
+
 
     public static final String GET_COMPLETION_RATE_THIS_WEEK =
             "SELECT \n" +

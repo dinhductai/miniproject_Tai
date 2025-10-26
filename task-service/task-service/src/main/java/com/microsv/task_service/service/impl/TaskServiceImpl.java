@@ -90,7 +90,7 @@ public class TaskServiceImpl implements TaskService {
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
 
-        DateUtil.ValidateDeadline(request.getDeadline());
+//        DateUtil.ValidateDeadline(request.getDeadline());
 
         task.setDeadline(request.getDeadline());
         task.setPriority(request.getPriority());
@@ -221,6 +221,11 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskPriorityCountResponse> countTasksByPriority() {
         return taskRepository.countTasksByPriority().stream()
                 .map(taskMapper::tupleToTaskPriorityCountResponse).toList();
+    }
+
+    @Override
+    public List<Task> findTaskByTitle(String title) {
+        return taskRepository.findByTitle(title);
     }
 
     @Override

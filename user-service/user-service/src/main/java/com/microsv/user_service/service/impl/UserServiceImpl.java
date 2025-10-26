@@ -146,9 +146,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> searchUserName(String name) {
+        return userRepository.searchUsersByUserName(name);
+    }
+
+    @Override
     public Long countUserRegisterThisWeek() {
         return userRepository.countUsersRegisteredThisWeek();
     }
+
+
 
 
 }

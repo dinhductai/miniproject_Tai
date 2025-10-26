@@ -32,11 +32,11 @@ public class NotificationController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/unsubscribe")
-    public ResponseEntity<Void> unsubscribe(@AuthenticationPrincipal Jwt jwt) {
-        Long userId = Long.parseLong(jwt.getSubject());
-        notificationService.unsubscribe(userId);
-        log.info("User {} unsubscribed from push notifications", userId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @DeleteMapping("/unsubscribe")
+//    public ResponseEntity<Void> unsubscribe(@AuthenticationPrincipal Jwt jwt) {
+//        Long userId = Long.parseLong(jwt.getSubject());
+//        notificationService.unsubscribe(userId);
+//        log.info("User {} unsubscribed from push notifications", userId);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

@@ -29,12 +29,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**") //
+                        .disable()
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                         .requestMatchers("/internal/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/users/create").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

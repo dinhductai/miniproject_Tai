@@ -34,8 +34,8 @@ public class UserController {
 
 
     @PostMapping("/create")
-    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreationRequest request) {
-        UserResponse response = userService.createUser(request);
+    public ResponseEntity<User> createUser(@Valid @RequestBody User request) {
+        User response = userService.createUser(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -73,4 +73,17 @@ public class UserController {
     public ResponseEntity<Long> countUserRegister(){
         return ResponseEntity.ok(userService.countUserRegisterThisWeek());
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(
+            @RequestParam("keyword") String keyword) {
+        List<User> users = userService.searchUserName(keyword);
+        return ResponseEntity.ok(users);
+    }
+
+    // @GetMapping("/search-email")
+    // public ResponseEntity<List<User>> getAllUsersEmail(@RequestParam("keyword") String keyword) {
+    //     List<User> users = userService.searchUser(keyword);
+    //     return ResponseEntity.ok(users);
+    // }
 }

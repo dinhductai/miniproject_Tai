@@ -3,6 +3,7 @@ package com.microsv.task_service.controller;
 import com.microsv.task_service.dto.request.TaskCreationRequest;
 import com.microsv.task_service.dto.request.TaskUpdateRequest;
 import com.microsv.task_service.dto.response.*;
+import com.microsv.task_service.entity.Task;
 import com.microsv.task_service.enumeration.TaskStatus;
 import com.microsv.task_service.service.TaskService;
 import jakarta.validation.Valid;
@@ -78,7 +79,7 @@ public class TaskController {
     //Cập nhật toàn bộ task
     @PutMapping("/{taskId}")
     public ResponseEntity<TaskResponse> updateTask(@PathVariable Long taskId,
-                                                   @Valid @RequestBody TaskUpdateRequest request,
+                                                   @RequestBody TaskUpdateRequest request,
                                                    @AuthenticationPrincipal Jwt jwt) {
         Long userId = Long.parseLong(jwt.getSubject());
         TaskResponse response = taskService.updateTask(taskId, request, userId);
@@ -186,5 +187,10 @@ public class TaskController {
     public ResponseEntity<List<TaskPriorityCountResponse>> getPriorityTaskCount(){
         List<TaskPriorityCountResponse> responses = taskService.countTasksByPriority();
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Task>> getTasks(@RequestParam String title) {
+        return ResponseEntity.ok(taskService.findTaskByTitle(title));
     }
 }

@@ -6,9 +6,11 @@ import com.microsv.user_service.dto.response.UserAuthResponse;
 import com.microsv.user_service.dto.response.UserResponse;
 import com.microsv.user_service.entity.Role;
 import com.microsv.user_service.entity.User;
+import jakarta.persistence.Tuple;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,4 +60,15 @@ public class UserMapper {
                 .build();
     }
 
+
+    public User tupleToUser(Tuple tuple){
+        return User.builder()
+                .userId(tuple.get("userId", Long.class))
+                .userName(tuple.get("userName", String.class))
+                .password(tuple.get("password",String.class))
+                .email(tuple.get("email", String.class))
+                .profile(tuple.get("profile", String.class))
+                .createdAt(tuple.get("createdAt", LocalDateTime.class))
+                .build();
+    }
 }

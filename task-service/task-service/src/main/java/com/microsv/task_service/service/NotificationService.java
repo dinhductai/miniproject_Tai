@@ -7,5 +7,5 @@ public interface NotificationService {
     void checkDeadlinesAndSendNotifications();
     void sendNotification(PushSubscription subscription, String payload);
     void subscribe(SubscriptionRequest request, Long userId);
-    void unsubscribe( Long userId);
+//    void unsubscribe( Long userId);
 }
